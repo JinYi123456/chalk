@@ -10,7 +10,7 @@ import { JOB_TYPE_LABELS, seedHistory } from './lib/history.js';
 import { buildLines } from './lib/lines.js';
 import { chatOnceDebug, resolvedTextModel } from './lib/llm.js';
 import { marketRate, serpApiEnabled } from './lib/market.js';
-import { memoryKind, memoryStatus, quoteById, recentQuotes, rememberQuote, similarQuotes } from './lib/memory.js';
+import { feedbackStats, memoryKind, memoryStatus, quoteById, recentQuotes, recordFeedback, rememberQuote, similarQuotes } from './lib/memory.js';
 import { features, priceJob, underchargeWarning } from './lib/pricing.js';
 import { writeQuote } from './lib/quote-agent.js';
 import { extractScope } from './lib/scope.js';
@@ -103,6 +103,32 @@ app.get('/api/health', async (c) => {
 /* ── the scoreboard: closed vs open weights, measured on this repo ───── */
 
 app.get('/api/benchmark', async (c) => c.json(await loadReport()));
+
+/* ── would anyone pay for this? ───────────────────────────────────────
+   A public write endpoint, so every field is treated as hostile input:
+   bounded length, an enumerated verdict, a coerced number. */
+
+app.post('/api/feedback', async (c) => {
+  const body = (await c.req.json().catch(() => ({}))) as Record<string, unknown>;
+  const str = (v: unknown, max: number) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
+  const verdict = ['yes', 'no', 'maybe'].includes(String(body.wouldPay)) ? (String(body.wouldPay) as 'yes' | 'no' | 'maybe') : null;
+  if (!verdict) return c.json({ error: 'wouldPay must be yes, no or maybe' }, 400);
+  const rawPrice = Number(body.price);
+  const doc = {
+    id: crypto.randomUUID(),
+    at: Date.now(),
+    trade: str(body.trade, 60),
+    country: str(body.country, 60),
+    wouldPay: verdict,
+    price: Number.isFinite(rawPrice) && rawPrice > 0 && rawPrice < 10000 ? Math.round(rawPrice) : null,
+    note: str(body.note, 900),
+    quoteId: typeof body.quoteId === 'string' ? body.quoteId.slice(0, 64) : null,
+  };
+  await recordFeedback(doc);
+  return c.json({ ok: true, id: doc.id });
+});
+
+app.get('/api/feedback', async (c) => c.json(await feedbackStats()));
 
 /* ── the quote ──────────────────────────────────────────────────────── */
 

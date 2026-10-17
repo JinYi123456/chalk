@@ -73,6 +73,12 @@ const vision = summarise(runs.filter((r) => r.score && 'hallucinations' in r.sco
 const scope = summarise(runs.filter((r) => r.score && 'precision' in r.score), 'scope');
 
 const label = (id) => (id === 'none-heuristic' ? 'no model (deterministic floor)' : (ARMS.find((a) => a.id === id)?.label ?? id));
+/** The eyes and the brain are different models on the same arm — name the one that answered. */
+const modelFor = (id, kind) => {
+  const a = ARMS.find((x) => x.id === id);
+  if (!a) return id;
+  return kind === 'vision' ? (a.vision?.model ?? a.model) : a.model;
+};
 const weights = (id) => (id === 'none-heuristic' ? 'none' : (ARMS.find((a) => a.id === id)?.weights ?? '?'));
 const where = (id) => (id === 'none-heuristic' ? 'this process' : (ARMS.find((a) => a.id === id)?.where ?? '?'));
 
@@ -82,20 +88,20 @@ md.push('');
 md.push('**usable** = the answer survived the product parser, so it could actually be quoted. **in-prose** = the same score read off the raw reply text before parsing. The gap is work the model knew but could not deliver in a form the product can price.');
 if (vision.length) {
   md.push('', '### Eyes — read the walkthrough photos', '');
-  md.push('| arm | weights | where | usable | in-prose | invented facts | caption counts | p50 | tokens/call | $/call |');
-  md.push('|---|---|---|---|---|---|---|---|---|---|');
+  md.push('| arm | model that answered | weights | where | usable | in-prose | invented facts | caption counts | p50 | tokens/call | $/call |');
+  md.push('|---|---|---|---|---|---|---|---|---|---|---|');
   for (const s of vision)
     md.push(
-      `| ${label(s.arm)} | ${weights(s.arm)} | ${where(s.arm)} | ${s.answered}/${s.cases} · ${pct(s.recall)} | ${pct(s.textRecall)} | ${s.inventions} | ${pct(s.captionCountsOk)} | ${secs(s.p50ms)} | ${s.tokensPerCase} | ${money(s.costPerCase)} |`
+      `| ${label(s.arm)} | \`${modelFor(s.arm, 'vision')}\` | ${weights(s.arm)} | ${where(s.arm)} | ${s.answered}/${s.cases} · ${pct(s.recall)} | ${pct(s.textRecall)} | ${s.inventions} | ${pct(s.captionCountsOk)} | ${secs(s.p50ms)} | ${s.tokensPerCase} | ${money(s.costPerCase)} |`
     );
 }
 if (scope.length) {
   md.push('', '### Brain — itemize the scope', '');
-  md.push('| arm | weights | where | usable | in-prose | invented lines | hours in band | photo refs | p50 | tokens/call | $/call |');
-  md.push('|---|---|---|---|---|---|---|---|---|---|---|');
+  md.push('| arm | model that answered | weights | where | usable | in-prose | invented lines | hours in band | photo refs | p50 | tokens/call | $/call |');
+  md.push('|---|---|---|---|---|---|---|---|---|---|---|---|');
   for (const s of scope)
     md.push(
-      `| ${label(s.arm)} | ${weights(s.arm)} | ${where(s.arm)} | ${s.answered}/${s.cases} · ${pct(s.recall)} | ${pct(s.textRecall)} | ${s.inventions} | ${pct(s.hoursInBand)} | ${pct(s.photoRefsOk)} | ${secs(s.p50ms)} | ${s.tokensPerCase} | ${money(s.costPerCase)} |`
+      `| ${label(s.arm)} | \`${s.arm === 'none-heuristic' ? 'heuristicScope()' : modelFor(s.arm, 'scope')}\` | ${weights(s.arm)} | ${where(s.arm)} | ${s.answered}/${s.cases} · ${pct(s.recall)} | ${pct(s.textRecall)} | ${s.inventions} | ${pct(s.hoursInBand)} | ${pct(s.photoRefsOk)} | ${secs(s.p50ms)} | ${s.tokensPerCase} | ${money(s.costPerCase)} |`
     );
 }
 

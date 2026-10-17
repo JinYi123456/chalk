@@ -677,7 +677,8 @@ export type StoredReport = {
   ranAt?: string;
   summary?: { vision: ArmSummary[]; scope: ArmSummary[] };
   runs?: ArmRun[];
-  arms?: Arm[];
+  /** credential-free by type: a report is a published artifact */
+  arms?: Omit<Arm, 'apiKey'>[];
   reproduce?: string;
 };
 
@@ -696,7 +697,12 @@ export async function loadReport(): Promise<StoredReport> {
   ];
   for (const p of candidates) {
     try {
-      const parsed = JSON.parse(await readFile(p, 'utf8')) as StoredReport & { summary?: { vision?: ArmSummary[]; scope?: ArmSummary[] } };
+      const parsed = JSON.parse(await readFile(p, 'utf8')) as {
+        ranAt?: string;
+        runs?: ArmRun[];
+        arms?: (Omit<Arm, 'apiKey'> & { apiKey?: string })[];
+        summary?: { vision?: ArmSummary[]; scope?: ArmSummary[] };
+      };
       if (!parsed.runs) continue;
       return {
         available: true,

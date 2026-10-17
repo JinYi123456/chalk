@@ -128,3 +128,75 @@ export async function memoryStatus(): Promise<{ kind: 'mongodb' | 'memory'; coun
 export function forgetAll(): void {
   ram.clear();
 }
+
+/* ── willingness to pay ──────────────────────────────────────────────────
+   The theme asks whether a real person would pay for this. An answer in a
+   paragraph is a claim; an answer in a row is a countable thing. Both are
+   kept — the note is the evidence, the tally is the headline. */
+
+export type FeedbackDoc = {
+  id: string;
+  at: number;
+  trade: string;
+  country: string;
+  wouldPay: 'yes' | 'no' | 'maybe';
+  price: number | null;
+  note: string;
+  /** the quote they were looking at, when they came from one */
+  quoteId: string | null;
+};
+
+let feedbackCol: Collection<FeedbackDoc> | null = null;
+const ramFeedback: FeedbackDoc[] = [];
+
+async function feedbackCollection(): Promise<Collection<FeedbackDoc> | null> {
+  if (inTestRun() || !config.mongoUri || connectFailed) return null;
+  if (feedbackCol) return feedbackCol;
+  const base = await collection();
+  if (!base) return null;
+  feedbackCol = db!.collection<FeedbackDoc>('feedback');
+  return feedbackCol;
+}
+
+export async function recordFeedback(doc: FeedbackDoc): Promise<void> {
+  const col = await feedbackCollection();
+  if (!col) {
+    ramFeedback.push(doc);
+    return;
+  }
+  try {
+    await col.updateOne({ id: doc.id }, { $set: doc }, { upsert: true });
+  } catch {
+    ramFeedback.push(doc);
+  }
+}
+
+export type FeedbackStats = {
+  total: number;
+  yes: number;
+  no: number;
+  maybe: number;
+  /** the lowest price a person volunteered, which is the one worth reporting */
+  prices: number[];
+  notes: { at: number; trade: string; wouldPay: string; price: number | null; note: string }[];
+  stored: 'mongodb' | 'memory';
+};
+
+export async function feedbackStats(): Promise<FeedbackStats> {
+  const col = await feedbackCollection();
+  let rows: FeedbackDoc[] = [];
+  if (col) {
+    rows = (await col.find({}, { projection: { _id: 0 } }).sort({ at: -1 }).limit(200).toArray().catch(() => ramFeedback)) as FeedbackDoc[];
+  } else {
+    rows = [...ramFeedback].sort((a, b) => b.at - a.at);
+  }
+  return {
+    total: rows.length,
+    yes: rows.filter((r) => r.wouldPay === 'yes').length,
+    no: rows.filter((r) => r.wouldPay === 'no').length,
+    maybe: rows.filter((r) => r.wouldPay === 'maybe').length,
+    prices: rows.map((r) => r.price).filter((p): p is number => typeof p === 'number' && p > 0),
+    notes: rows.map((r) => ({ at: r.at, trade: r.trade, wouldPay: r.wouldPay, price: r.price, note: r.note })),
+    stored: col ? 'mongodb' : 'memory',
+  };
+}
