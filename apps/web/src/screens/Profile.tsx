@@ -6,7 +6,25 @@ function Live({ on }: { on: boolean }) {
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
-function BenchGroup({ title, note, rows, bench }: { title: string; note: string; rows: BenchRow[]; bench: Benchmark }) {
+/**
+ * The deterministic floor is not in the arm table because it is not an arm. It
+ * must never inherit a model label by falling through a lookup — that would
+ * print "open weights" next to a row produced by no model at all.
+ */
+function armMeta(bench: Benchmark, id: string, kind: 'vision' | 'scope') {
+  const arm = bench.arms?.find((a) => a.id === id);
+  if (!arm) return { name: 'no model — deterministic floor', weights: 'no model', where: 'this process', model: 'heuristicScope()' };
+  return {
+    name: arm.label,
+    weights: arm.weights === 'closed' ? 'closed weights' : 'open weights',
+    where: arm.where === 'device' ? 'this laptop' : arm.vendor,
+    // The eyes and the brain are different models on the same arm. Name the one
+    // that actually answered, or two rows can share a label and differ anyway.
+    model: kind === 'vision' ? (arm.vision?.model ?? arm.model) : arm.model,
+  };
+}
+
+function BenchGroup({ title, note, rows, bench, kind }: { title: string; note: string; rows: BenchRow[]; bench: Benchmark; kind: 'vision' | 'scope' }) {
   if (!rows.length) return null;
   return (
     <div className="card">
@@ -15,23 +33,32 @@ function BenchGroup({ title, note, rows, bench }: { title: string; note: string;
         <small>{note}</small>
       </div>
       {rows.map((r) => {
-        const arm = bench.arms?.find((a) => a.id === r.arm);
+        const m = armMeta(bench, r.arm, kind);
         return (
           <div className="bench-row" key={r.arm}>
             <div className="bench-top">
-              <span className="bench-name">{arm?.label ?? r.arm}</span>
+              <span className="bench-name">{m.name}</span>
               <span className="bench-usable">{pct(r.recall)}</span>
             </div>
             <div className="bench-meta">
-              <span>{arm?.weights === 'closed' ? 'closed weights' : arm?.weights === 'none' ? 'no model' : 'open weights'}</span>
-              <span> · {arm?.where === 'device' ? 'this laptop' : arm?.vendor ?? r.arm}</span>
+              <span>{m.weights}</span>
+              <span> · {m.where}</span>
             </div>
+            <div className="bench-model">{m.model}</div>
             <div className="bench-nums">
-              <span title="work the model identified in its own prose">found {pct(r.textRecall)}</span>
+              <span title="work the model identified anywhere in its own reply">found {pct(r.textRecall)}</span>
               <span title="how many answers survived the product parser">{r.answered}/{r.cases} usable</span>
               <span title="facts or line items invented that the walkthrough does not support">{r.inventions} invented</span>
+              {kind === 'vision' ? (
+                <span title="one caption per photo, in order">{pct(r.captionCountsOk)} captions right</span>
+              ) : (
+                <>
+                  <span title="hours estimate inside the band a competent pro would give">{pct(r.hoursInBand)} hours sane</span>
+                  <span title="at least two line items point back at a photo">{pct(r.photoRefsOk)} photo refs</span>
+                </>
+              )}
               <span>{(r.p50ms / 1000).toFixed(1)}s</span>
-              <span title="USD per call at the provider's published list price; n/a where none is published">
+              <span title="USD per call at the provider's published list price; blank where none is published">
                 {r.costPerCase === null ? 'no list price' : r.costPerCase === 0 ? '$0.0000' : `$${r.costPerCase.toFixed(4)}`}
               </span>
             </div>
@@ -198,8 +225,8 @@ export function ProfileView({
             ship. <strong>found</strong> is work the model named anywhere in its reply; <strong>usable</strong> is the
             same score after the product parser. The gap is a model that understood the job and still could not price it.
           </p>
-          <BenchGroup title="Eyes — read the photos" note="keyword recall against the answer key" rows={bench.summary?.vision ?? []} bench={bench} />
-          <BenchGroup title="Brain — itemize the scope" note="one authored site read, so the eyes are not blamed" rows={bench.summary?.scope ?? []} bench={bench} />
+          <BenchGroup title="Eyes — read the photos" note="one caption per photo, in order" kind="vision" rows={bench.summary?.vision ?? []} bench={bench} />
+          <BenchGroup title="Brain — itemize the scope" note="one authored site read, so the eyes are not blamed" kind="scope" rows={bench.summary?.scope ?? []} bench={bench} />
           <p className="small-note">
             Ran {bench.ranAt ? new Date(bench.ranAt).toUTCString().replace(':00 GMT', ' GMT') : '—'}. Scores are
             keyword-set recall against a hand-written key in <code>services/agent/src/lib/benchmark.ts</code>, so no

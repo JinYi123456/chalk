@@ -40,3 +40,6 @@ Python/
 submission/
 
 .vercel
+
+# local capture scratch (screenshots/video frames), not part of the product
+.capture/

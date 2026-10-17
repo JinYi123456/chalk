@@ -120,7 +120,16 @@ export type Benchmark = {
   available: boolean;
   ranAt?: string;
   reproduce?: string;
-  arms?: { id: string; label: string; vendor: string; weights: string; where: string; price: { in: number; out: number } | null }[];
+  arms?: {
+    id: string;
+    label: string;
+    vendor: string;
+    weights: string;
+    where: string;
+    model: string;
+    vision?: { model: string };
+    price: { in: number; out: number } | null;
+  }[];
   summary?: { vision: BenchRow[]; scope: BenchRow[] };
 };
 

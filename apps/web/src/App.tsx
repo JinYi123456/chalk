@@ -14,6 +14,32 @@ export const STEPS = [
   'Writing the quote in your voice',
 ];
 
+/** Drawn in the same stroke language as the brand mark, and it inherits the tab colour. */
+function TabIcon({ kind }: { kind: 'jobs' | 'walk' | 'you' }) {
+  return (
+    <svg className="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {kind === 'jobs' && (
+        <>
+          <path d="M6 3.5h12v17l-3-2-3 2-3-2-3 2z" />
+          <path d="M9.5 8.5h5M9.5 12.5h5" />
+        </>
+      )}
+      {kind === 'walk' && (
+        <>
+          <path d="M3.5 8.5h3l1.5-2.5h6L15.5 8.5h5v11h-17z" />
+          <circle cx="12" cy="13.5" r="3.5" />
+        </>
+      )}
+      {kind === 'you' && (
+        <>
+          <circle cx="12" cy="8" r="3.8" />
+          <path d="M5 20c1.2-3.6 3.8-5.4 7-5.4s5.8 1.8 7 5.4" />
+        </>
+      )}
+    </svg>
+  );
+}
+
 export function App() {
   const [tab, setTab] = useState<Tab>('jobs');
   const [health, setHealth] = useState<Health | null>(null);
@@ -139,15 +165,15 @@ export function App() {
 
       <nav className="nav">
         <button className={tab === 'jobs' ? 'active' : ''} onClick={() => setTab('jobs')}>
-          <span className="dot" />
+          <TabIcon kind="jobs" />
           Jobs
         </button>
         <button className={tab === 'walk' ? 'active' : ''} onClick={() => setTab('walk')}>
-          <span className="dot" />
+          <TabIcon kind="walk" />
           Walk
         </button>
         <button className={tab === 'profile' ? 'active' : ''} onClick={() => setTab('profile')}>
-          <span className="dot" />
+          <TabIcon kind="you" />
           You
         </button>
       </nav>
