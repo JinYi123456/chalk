@@ -83,6 +83,7 @@ export type Health = {
   serpapi: boolean;
   sentry: boolean;
   temporal: boolean;
+  temporalConnected: boolean;
   tinker: boolean;
   tiger: boolean;
   tigerConnected: boolean;
@@ -99,6 +100,29 @@ export type Profile = {
 };
 
 export type MarginPoint = { day: string; quoted: number; won: number; revenue: number; winRate: number };
+
+export type BenchRow = {
+  arm: string;
+  cases: number;
+  answered: number;
+  recall: number;
+  textRecall: number;
+  inventions: number;
+  hoursInBand: number;
+  captionCountsOk: number;
+  photoRefsOk: number;
+  p50ms: number;
+  tokensPerCase: number;
+  costPerCase: number | null;
+};
+
+export type Benchmark = {
+  available: boolean;
+  ranAt?: string;
+  reproduce?: string;
+  arms?: { id: string; label: string; vendor: string; weights: string; where: string; price: { in: number; out: number } | null }[];
+  summary?: { vision: BenchRow[]; scope: BenchRow[] };
+};
 
 export type QuoteInput = {
   photos: string[];
@@ -121,6 +145,7 @@ export const api = {
   health: () => j<Health>('/api/health'),
   profile: () => j<Profile>('/api/profile'),
   margin: (days = 30) => j<{ enabled: boolean; connected: boolean; total: number; series: MarginPoint[] }>(`/api/margin?days=${days}`),
+  benchmark: () => j<Benchmark>('/api/benchmark'),
   jobs: () => j<{ kind: string; jobs: Quote[] }>('/api/jobs'),
   job: (id: string) => j<Quote & { followUpLive?: unknown }>(`/api/jobs/${id}`),
   quote: (input: QuoteInput) =>

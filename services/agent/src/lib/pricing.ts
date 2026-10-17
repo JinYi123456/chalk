@@ -198,6 +198,17 @@ export async function tabpfnPricing(
  */
 const CLOUD_WAIT_MS = 12_000;
 
+/**
+ * The first quote in a cold process is not the slow tail: nothing has been
+ * fitted yet, so that call has to upload the history and fit before it can
+ * predict at all. Capping it at 12s meant a serverless deployment silently
+ * priced *every* first quote by heuristic and never showed the model working.
+ * Only the first call gets the longer budget, so the worst case is one slow
+ * quote per instance rather than an unbounded wait.
+ */
+const CLOUD_WAIT_COLD_MS = 45_000;
+let coldCallSpent = false;
+
 function settled<T>(p: Promise<T>, ms: number): Promise<T | null> {
   let timer: ReturnType<typeof setTimeout> | undefined;
   return Promise.race([
@@ -219,7 +230,9 @@ function settled<T>(p: Promise<T>, ms: number): Promise<T | null> {
 export async function priceJob(scope: JobScope, history: PastJob[]): Promise<PricingResult> {
   const f = features(scope);
 
-  const cloud = await settled(tabpfnCloudPredict(f, history).catch(() => null), CLOUD_WAIT_MS);
+  const budget = coldCallSpent ? CLOUD_WAIT_MS : CLOUD_WAIT_COLD_MS;
+  coldCallSpent = true;
+  const cloud = await settled(tabpfnCloudPredict(f, history).catch(() => null), budget);
   const modelBand = usableBand(cloud?.band) ? cloud!.band! : null;
 
   let result: PricingResult | null = cloud

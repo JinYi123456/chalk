@@ -58,6 +58,13 @@ export const config = {
   temporalAddress: (process.env.TEMPORAL_ADDRESS || '').replace(/^https?:\/\//, ''),
   temporalNamespace: process.env.TEMPORAL_NAMESPACE || 'default',
   temporalTaskQueue: process.env.TEMPORAL_TASK_QUEUE || 'chalk-followups',
+  // Temporal Cloud takes a Bearer API key or an mTLS client certificate; a bare
+  // address would only ever reach a local dev server, and silently failing there
+  // is how "durable follow-ups" becomes a claim nobody can check.
+  temporalApiKey: process.env.TEMPORAL_API_KEY || '',
+  temporalClientCert: process.env.TEMPORAL_CLIENT_CERT || '',
+  temporalClientKey: process.env.TEMPORAL_CLIENT_KEY || '',
+  temporalCaCert: process.env.TEMPORAL_CA_CERT || '',
   // Where follow-up workflows can reach this deployment. Vercel exposes the
   // production domain only after the first deploy, so PUBLIC_BASE_URL wins.
   publicBaseUrl: (

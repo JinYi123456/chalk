@@ -16,7 +16,7 @@ import { writeQuote } from './lib/quote-agent.js';
 import { extractScope } from './lib/scope.js';
 import { captureException, sentryEnabled, withSpan } from './lib/sentry.js';
 import { tabpfnCloudEnabled } from './lib/tabpfn-cloud.js';
-import { followUpStatus, signalQuoteAccepted, startQuoteFollowUp, temporalEnabled } from './lib/temporal.js';
+import { followUpStatus, signalQuoteAccepted, startQuoteFollowUp, temporalStatus } from './lib/temporal.js';
 import { marginSeries, recordJobEvent, tigerEnabled, tigerStatus } from './lib/tiger.js';
 import { voiceFromTinker, tinkerEnabled } from './lib/tinker.js';
 import { audioFile, readAloudDataUrl, ttsEnabled } from './lib/tts.js';
@@ -69,12 +69,13 @@ export async function loadHistory(): Promise<PastJob[]> {
 /* ── health ─────────────────────────────────────────────────────────── */
 
 app.get('/api/health', async (c) => {
-  const [tabpfnOk, mem, tiger] = await Promise.all([
+  const [tabpfnOk, mem, tiger, temporal] = await Promise.all([
     fetch(`${config.tabpfnUrl}/health`, { signal: AbortSignal.timeout(2500) })
       .then((r) => r.ok)
       .catch(() => false),
     memoryStatus(),
     tigerStatus(),
+    temporalStatus(),
   ]);
   return c.json({
     ok: true,
@@ -89,7 +90,8 @@ app.get('/api/health', async (c) => {
     tts: ttsEnabled(),
     serpapi: serpApiEnabled(),
     sentry: sentryEnabled(),
-    temporal: temporalEnabled(),
+    temporal: temporal.enabled,
+    temporalConnected: temporal.connected,
     tinker: tinkerEnabled(),
     tiger: tiger.enabled,
     tigerConnected: tiger.connected,

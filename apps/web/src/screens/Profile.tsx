@@ -1,17 +1,57 @@
-import { money, type Health, type MarginPoint, type Profile } from '../api.ts';
+import { money, type Benchmark, type BenchRow, type Health, type MarginPoint, type Profile } from '../api.ts';
 
 function Live({ on }: { on: boolean }) {
   return <span className={`dot-live ${on ? 'on' : ''}`} />;
+}
+
+const pct = (x: number) => `${Math.round(x * 100)}%`;
+
+function BenchGroup({ title, note, rows, bench }: { title: string; note: string; rows: BenchRow[]; bench: Benchmark }) {
+  if (!rows.length) return null;
+  return (
+    <div className="card">
+      <div className="bench-h">
+        <span>{title}</span>
+        <small>{note}</small>
+      </div>
+      {rows.map((r) => {
+        const arm = bench.arms?.find((a) => a.id === r.arm);
+        return (
+          <div className="bench-row" key={r.arm}>
+            <div className="bench-top">
+              <span className="bench-name">{arm?.label ?? r.arm}</span>
+              <span className="bench-usable">{pct(r.recall)}</span>
+            </div>
+            <div className="bench-meta">
+              <span>{arm?.weights === 'closed' ? 'closed weights' : arm?.weights === 'none' ? 'no model' : 'open weights'}</span>
+              <span> · {arm?.where === 'device' ? 'this laptop' : arm?.vendor ?? r.arm}</span>
+            </div>
+            <div className="bench-nums">
+              <span title="work the model identified in its own prose">found {pct(r.textRecall)}</span>
+              <span title="how many answers survived the product parser">{r.answered}/{r.cases} usable</span>
+              <span title="facts or line items invented that the walkthrough does not support">{r.inventions} invented</span>
+              <span>{(r.p50ms / 1000).toFixed(1)}s</span>
+              <span title="USD per call at the provider's published list price; n/a where none is published">
+                {r.costPerCase === null ? 'no list price' : r.costPerCase === 0 ? '$0.0000' : `$${r.costPerCase.toFixed(4)}`}
+              </span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 export function ProfileView({
   profile,
   health,
   margin,
+  bench,
 }: {
   profile: Profile | null;
   health: Health | null;
   margin: MarginPoint[];
+  bench: Benchmark | null;
 }) {
   const byType = profile ? Object.entries(profile.byType).sort((a, b) => b[1].jobs - a[1].jobs) : [];
   const maxRev = Math.max(1, ...margin.map((m) => m.revenue));
@@ -121,9 +161,9 @@ export function ProfileView({
           {health?.serpapi ? 'SerpApi live rates' : 'not configured'}
         </div>
         <div>
-          <Live on={Boolean(health?.temporal)} />
+          <Live on={Boolean(health?.temporalConnected)} />
           <span className="k">Follow-ups</span>
-          {health?.temporal ? 'Temporal durable timers' : 'not configured'}
+          {health?.temporalConnected ? 'Temporal durable timers' : health?.temporal ? 'Temporal configured, not connected' : 'not configured'}
         </div>
         <div>
           <Live on={Boolean(health?.sentry)} />
@@ -141,6 +181,32 @@ export function ProfileView({
           {health?.tinker ? 'Tinker fine-tuned sampler' : 'built-in voice'}
         </div>
       </div>
+
+      <h2>Open vs closed, measured</h2>
+      {!bench?.available ? (
+        <div className="card">
+          <p className="small-note" style={{ margin: 0 }}>
+            No benchmark run stored on this build. Reproduce it with{' '}
+            <code>{bench?.reproduce ?? 'node services/agent/scripts/benchmark.mjs'}</code> — the same walkthrough sent
+            to closed models, hosted open-weight models, and a model running with no network at all.
+          </p>
+        </div>
+      ) : (
+        <>
+          <p className="lead">
+            The honest question is not whether open weights are nicer, it is whether they answer in a form a quote can
+            ship. <strong>found</strong> is work the model named anywhere in its reply; <strong>usable</strong> is the
+            same score after the product parser. The gap is a model that understood the job and still could not price it.
+          </p>
+          <BenchGroup title="Eyes — read the photos" note="keyword recall against the answer key" rows={bench.summary?.vision ?? []} bench={bench} />
+          <BenchGroup title="Brain — itemize the scope" note="one authored site read, so the eyes are not blamed" rows={bench.summary?.scope ?? []} bench={bench} />
+          <p className="small-note">
+            Ran {bench.ranAt ? new Date(bench.ranAt).toUTCString().replace(':00 GMT', ' GMT') : '—'}. Scores are
+            keyword-set recall against a hand-written key in <code>services/agent/src/lib/benchmark.ts</code>, so no
+            model judges a model and every number here can be recomputed. Reproduce: <code>{bench.reproduce}</code>.
+          </p>
+        </>
+      )}
 
       <p className="small-note">
         Every layer above is optional. Pull any of them out and Chalk keeps quoting — it just tells you which one

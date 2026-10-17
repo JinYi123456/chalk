@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { api, type Health, type MarginPoint, type Profile, type Quote, type QuoteInput } from './api.ts';
+import { api, type Benchmark, type Health, type MarginPoint, type Profile, type Quote, type QuoteInput } from './api.ts';
 import { Walk } from './screens/Walk.tsx';
 import { QuoteView } from './screens/QuoteView.tsx';
 import { Jobs } from './screens/Jobs.tsx';
@@ -20,6 +20,7 @@ export function App() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [jobs, setJobs] = useState<Quote[]>([]);
   const [margin, setMargin] = useState<MarginPoint[]>([]);
+  const [bench, setBench] = useState<Benchmark | null>(null);
   const [quote, setQuote] = useState<Quote | null>(null);
   const [busy, setBusy] = useState(false);
   const [step, setStep] = useState(0);
@@ -28,11 +29,12 @@ export function App() {
   const stepTimer = useRef<number | null>(null);
 
   const refresh = useCallback(async () => {
-    const [h, p, j, m] = await Promise.allSettled([api.health(), api.profile(), api.jobs(), api.margin(30)]);
+    const [h, p, j, m, b] = await Promise.allSettled([api.health(), api.profile(), api.jobs(), api.margin(30), api.benchmark()]);
     if (h.status === 'fulfilled') setHealth(h.value);
     if (p.status === 'fulfilled') setProfile(p.value);
     if (j.status === 'fulfilled') setJobs(j.value.jobs);
     if (m.status === 'fulfilled' && m.value.enabled) setMargin(m.value.series);
+    if (b.status === 'fulfilled') setBench(b.value);
   }, []);
 
   useEffect(() => {
@@ -133,7 +135,7 @@ export function App() {
 
       {tab === 'quote' && !quote && <div className="empty">No quote open yet. Walk a job first.</div>}
 
-      {tab === 'profile' && <ProfileView profile={profile} health={health} margin={margin} />}
+      {tab === 'profile' && <ProfileView profile={profile} health={health} margin={margin} bench={bench} />}
 
       <nav className="nav">
         <button className={tab === 'jobs' ? 'active' : ''} onClick={() => setTab('jobs')}>

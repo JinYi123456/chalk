@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch --import ./scripts/sentry-preload.mjs src/index.ts",
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && node scripts/copy-eval.mjs",
     "start": "node --import ./scripts/sentry-preload.mjs dist/index.js",
     "temporal:worker": "tsx src/temporal/worker.ts",
     "test": "vitest run"

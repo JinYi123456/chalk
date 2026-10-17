@@ -132,6 +132,16 @@ export const ARMS: Arm[] = [
 
 export const visionArms = (): Arm[] => ARMS.filter((a) => a.vision);
 
+/**
+ * What may leave the process. An Arm carries the endpoint credential, and a
+ * report is a published artifact — so the key is stripped here rather than at
+ * each call site, where forgetting one would put a live API key in a repo.
+ */
+export function armPublic(a: Arm): Omit<Arm, 'apiKey'> {
+  const { apiKey: _apiKey, ...rest } = a;
+  return rest;
+}
+
 /* ── the answer key ─────────────────────────────────────────────────────── */
 
 export type VisionCase = {
@@ -677,6 +687,8 @@ export async function loadReport(): Promise<StoredReport> {
   const { fileURLToPath } = await import('node:url');
   const here = dirname(fileURLToPath(import.meta.url));
   const candidates = [
+    // bundled beside the compiled agent — the only path that exists on Vercel
+    resolve(here, '..', 'eval', 'results.json'),
     resolve(here, '..', '..', '..', '..', 'eval', 'results.json'),
     resolve(here, '..', '..', 'eval', 'results.json'),
     resolve(process.cwd(), 'eval', 'results.json'),
@@ -690,7 +702,9 @@ export async function loadReport(): Promise<StoredReport> {
         available: true,
         ranAt: parsed.ranAt,
         runs: parsed.runs,
-        arms: parsed.arms,
+        // Stripped again on the way out: a report written by an older build
+        // still sitting in eval/ must not be able to serve a key to a browser.
+        arms: (parsed.arms ?? []).map(({ apiKey: _k, ...rest }) => rest),
         summary: { vision: parsed.summary?.vision ?? [], scope: parsed.summary?.scope ?? [] },
         reproduce: 'node services/agent/scripts/benchmark.mjs',
       };

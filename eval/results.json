@@ -1,7 +1,89 @@
 {
- "ranAt": "2026-10-17T16:01:10.727Z",
- "kind": "scope",
+ "ranAt": "2026-10-17T16:44:33.127Z",
+ "kind": "both",
  "arms": [
+  {
+   "id": "closed-flash",
+   "label": "Gemini 3.8 Flash",
+   "vendor": "Google AI Studio",
+   "weights": "closed",
+   "where": "hosted",
+   "baseURL": "https://generativelanguage.googleapis.com/v1beta/openai",
+   "model": "gemini-3.8-flash",
+   "vision": {
+    "model": "gemini-3.8-flash"
+   },
+   "maxTokens": 1400,
+   "price": {
+    "in": 0.75,
+    "out": 3.75
+   },
+   "priceNote": "introductory rate published through 2026-12-31"
+  },
+  {
+   "id": "closed-lite",
+   "label": "Gemini 3.1 Flash-Lite",
+   "vendor": "Google AI Studio",
+   "weights": "closed",
+   "where": "hosted",
+   "baseURL": "https://generativelanguage.googleapis.com/v1beta/openai",
+   "model": "gemini-3.1-flash-lite",
+   "vision": {
+    "model": "gemini-3.1-flash-lite"
+   },
+   "maxTokens": 1400,
+   "price": {
+    "in": 0.25,
+    "out": 1.5
+   }
+  },
+  {
+   "id": "open-gemma-hosted",
+   "label": "Gemma 4 26B-A4B (open weights)",
+   "vendor": "Google AI Studio — same endpoint",
+   "weights": "open",
+   "where": "hosted",
+   "baseURL": "https://generativelanguage.googleapis.com/v1beta/openai",
+   "model": "gemma-4-26b-a4b-it",
+   "maxTokens": 3200,
+   "price": null,
+   "priceNote": "AI Studio publishes no per-token price for Gemma, so this row is tokens only"
+  },
+  {
+   "id": "open-qwen-nebius",
+   "label": "Qwen3 30B-A3B (open weights)",
+   "vendor": "Nebius Studio",
+   "weights": "open",
+   "where": "hosted",
+   "baseURL": "https://api.studio.nebius.com/v1",
+   "model": "Qwen/Qwen3-30B-A3B-Instruct-2507",
+   "vision": {
+    "model": "google/gemma-3-27b-it"
+   },
+   "maxTokens": 1400,
+   "price": {
+    "in": 0.1,
+    "out": 0.3
+   }
+  },
+  {
+   "id": "open-qwen-featherless",
+   "label": "Qwen3 30B-A3B (open weights)",
+   "vendor": "Featherless — same model, other host",
+   "weights": "open",
+   "where": "hosted",
+   "baseURL": "https://api.featherless.ai/v1",
+   "model": "Qwen/Qwen3-30B-A3B-Instruct-2507",
+   "vision": {
+    "model": "Qwen/Qwen3-VL-30B-A3B-Instruct"
+   },
+   "maxTokens": 1400,
+   "price": {
+    "in": 0.125,
+    "out": 0.45
+   },
+   "priceNote": "vision sibling Qwen3-VL-30B is $0.15 / $0.50 on the same page"
+  },
   {
    "id": "open-gemma-device",
    "label": "Gemma 4 E2B on this laptop",
@@ -9,10 +91,11 @@
    "weights": "open",
    "where": "device",
    "baseURL": "http://127.0.0.1:11434/v1",
-   "apiKey": "ollama",
    "model": "gemma4:e2b",
-   "visionModel": "gemma3:4b",
-   "maxTokens": 1400,
+   "vision": {
+    "model": "gemma3:4b"
+   },
+   "maxTokens": 900,
    "price": {
     "in": 0,
     "out": 0
@@ -22,14 +105,1821 @@
  ],
  "runs": [
   {
+   "arm": "closed-flash",
+   "case": "v1-kitchen-oven",
+   "ok": true,
+   "ms": 8968,
+   "inTokens": 2441,
+   "outTokens": 141,
+   "cost": 0.0023595,
+   "score": {
+    "recall": 1,
+    "seen": 7,
+    "of": 7,
+    "textRecall": 1,
+    "hallucinations": [],
+    "captionCount": 2,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "four-burner gas hob",
+     "tiled splashback with grease buildup",
+     "soiled wood flooring",
+     "laminate countertop and sink",
+     "stained white cabinets",
+     "built-in single oven interior"
+    ]
+   }
+  },
+  {
+   "arm": "closed-flash",
+   "case": "v2-lounge-bedroom",
+   "ok": true,
+   "ms": 8658,
+   "inTokens": 2438,
+   "outTokens": 128,
+   "cost": 0.0023085,
+   "score": {
+    "recall": 0.75,
+    "seen": 6,
+    "of": 8,
+    "textRecall": 0.75,
+    "hallucinations": [],
+    "captionCount": 2,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "wall-to-wall carpeting",
+     "fabric sofa with debris and pet hair",
+     "dark staining in carpet corner",
+     "grimy wardrobe handles",
+     "pet hair tufts at bedroom threshold",
+     "dusty media unit surface"
+    ]
+   }
+  },
+  {
+   "arm": "closed-flash",
+   "case": "v3-bath-stairs",
+   "ok": true,
+   "ms": 11593,
+   "inTokens": 2435,
+   "outTokens": 126,
+   "cost": 0.00229875,
+   "score": {
+    "recall": 0.8888888888888888,
+    "seen": 8,
+    "of": 9,
+    "textRecall": 0.8888888888888888,
+    "hallucinations": [],
+    "captionCount": 2,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "glass shower enclosure",
+     "toilet and pedestal sink",
+     "tiled bathroom walls",
+     "carpeted flight of stairs",
+     "timber handrail with spindles"
+    ]
+   }
+  },
+  {
+   "arm": "closed-flash",
+   "case": "v4-kitchen-silent",
+   "ok": true,
+   "ms": 10520,
+   "inTokens": 1359,
+   "outTokens": 128,
+   "cost": 0.00149925,
+   "score": {
+    "recall": 1,
+    "seen": 5,
+    "of": 5,
+    "textRecall": 1,
+    "hallucinations": [],
+    "captionCount": 1,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "greasy four-burner gas stovetop",
+     "white tiled splashback with grease splatters",
+     "laminate worktop with stainless steel sink",
+     "worn wooden plank floor with debris",
+     "white base cabinets with handprint marks",
+     "wooden dining table with food residue"
+    ]
+   }
+  },
+  {
+   "arm": "closed-lite",
+   "case": "v1-kitchen-oven",
+   "ok": true,
+   "ms": 1541,
+   "inTokens": 2441,
+   "outTokens": 88,
+   "cost": 0.00074225,
+   "score": {
+    "recall": 0.7142857142857143,
+    "seen": 5,
+    "of": 7,
+    "textRecall": 0.7142857142857143,
+    "hallucinations": [],
+    "captionCount": 2,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "greasy gas hob",
+     "stained wooden floor",
+     "soiled kitchen cabinets",
+     "heavily burnt-on oven grease"
+    ]
+   }
+  },
+  {
+   "arm": "closed-lite",
+   "case": "v2-lounge-bedroom",
+   "ok": true,
+   "ms": 2573,
+   "inTokens": 2438,
+   "outTokens": 93,
+   "cost": 0.000749,
+   "score": {
+    "recall": 0.75,
+    "seen": 6,
+    "of": 8,
+    "textRecall": 0.75,
+    "hallucinations": [],
+    "captionCount": 2,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "carpeted floors",
+     "upholstered sofa",
+     "wooden media console",
+     "metal bed frame",
+     "built-in wardrobe",
+     "window blinds"
+    ]
+   }
+  },
+  {
+   "arm": "closed-lite",
+   "case": "v3-bath-stairs",
+   "ok": true,
+   "ms": 1534,
+   "inTokens": 2435,
+   "outTokens": 96,
+   "cost": 0.00075275,
+   "score": {
+    "recall": 0.7777777777777778,
+    "seen": 7,
+    "of": 9,
+    "textRecall": 0.7777777777777778,
+    "hallucinations": [],
+    "captionCount": 2,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "shower screen with heavy soap scum",
+     "toilet bowl with visible staining",
+     "white tiled walls",
+     "grey carpeted stairs",
+     "wooden handrail",
+     "white painted walls"
+    ]
+   }
+  },
+  {
+   "arm": "closed-lite",
+   "case": "v4-kitchen-silent",
+   "ok": true,
+   "ms": 1371,
+   "inTokens": 1359,
+   "outTokens": 83,
+   "cost": 0.00046425,
+   "score": {
+    "recall": 1,
+    "seen": 5,
+    "of": 5,
+    "textRecall": 1,
+    "hallucinations": [],
+    "captionCount": 1,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "greasy gas stovetop",
+     "tiled splashback with grease",
+     "wooden dining table",
+     "stained wooden floor",
+     "white kitchen cabinets"
+    ]
+   }
+  },
+  {
+   "arm": "open-qwen-nebius",
+   "case": "v1-kitchen-oven",
+   "ok": true,
+   "ms": 3002,
+   "inTokens": 840,
+   "outTokens": 62,
+   "cost": 0.0001026,
+   "score": {
+    "recall": 0.8571428571428571,
+    "seen": 6,
+    "of": 7,
+    "textRecall": 0.8571428571428571,
+    "hallucinations": [],
+    "captionCount": 2,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "wooden floors",
+     "tiled kitchen walls",
+     "gas hob",
+     "dirty countertops"
+    ]
+   }
+  },
+  {
+   "arm": "open-qwen-nebius",
+   "case": "v2-lounge-bedroom",
+   "ok": true,
+   "ms": 2046,
+   "inTokens": 837,
+   "outTokens": 92,
+   "cost": 0.0001113,
+   "score": {
+    "recall": 0.875,
+    "seen": 7,
+    "of": 8,
+    "textRecall": 0.875,
+    "hallucinations": [],
+    "captionCount": 2,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "grey sofa",
+     "large TV",
+     "light wood cabinet",
+     "grey carpet",
+     "metal bed frame",
+     "built-in wardrobe"
+    ]
+   }
+  },
+  {
+   "arm": "open-qwen-nebius",
+   "case": "v3-bath-stairs",
+   "ok": true,
+   "ms": 1504,
+   "inTokens": 834,
+   "outTokens": 67,
+   "cost": 0.0001035,
+   "score": {
+    "recall": 0.5555555555555556,
+    "seen": 5,
+    "of": 9,
+    "textRecall": 0.5555555555555556,
+    "hallucinations": [],
+    "captionCount": 2,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "shower screen",
+     "tiled walls",
+     "carpeted stairs",
+     "toilet",
+     "sink",
+     "handrail"
+    ]
+   }
+  },
+  {
+   "arm": "open-qwen-nebius",
+   "case": "v4-kitchen-silent",
+   "ok": true,
+   "ms": 1498,
+   "inTokens": 563,
+   "outTokens": 63,
+   "cost": 0.0000752,
+   "score": {
+    "recall": 1,
+    "seen": 5,
+    "of": 5,
+    "textRecall": 1,
+    "hallucinations": [],
+    "captionCount": 1,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "wooden floorboards",
+     "white kitchen cabinets",
+     "tiled backsplash",
+     "gas hob"
+    ]
+   }
+  },
+  {
+   "arm": "open-qwen-featherless",
+   "case": "v1-kitchen-oven",
+   "ok": true,
+   "ms": 2925,
+   "inTokens": 1846,
+   "outTokens": 92,
+   "cost": 0.00027215,
+   "score": {
+    "recall": 0.8571428571428571,
+    "seen": 6,
+    "of": 7,
+    "textRecall": 0.8571428571428571,
+    "hallucinations": [],
+    "captionCount": 2,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "tiled kitchen floor",
+     "wooden dining table",
+     "stained oven door",
+     "greasy hob",
+     "white kitchen cabinets",
+     "wooden chairs"
+    ]
+   }
+  },
+  {
+   "arm": "open-qwen-featherless",
+   "case": "v2-lounge-bedroom",
+   "ok": true,
+   "ms": 2533,
+   "inTokens": 1843,
+   "outTokens": 135,
+   "cost": 0.000291125,
+   "score": {
+    "recall": 0.875,
+    "seen": 7,
+    "of": 8,
+    "textRecall": 0.875,
+    "hallucinations": [],
+    "captionCount": 2,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "carpeted floor",
+     "sofa",
+     "TV cabinet",
+     "bed frame",
+     "wardrobe",
+     "window",
+     "curtains",
+     "plant"
+    ]
+   }
+  },
+  {
+   "arm": "open-qwen-featherless",
+   "case": "v3-bath-stairs",
+   "ok": true,
+   "ms": 1871,
+   "inTokens": 1842,
+   "outTokens": 95,
+   "cost": 0.000273,
+   "score": {
+    "recall": 0.4444444444444444,
+    "seen": 4,
+    "of": 9,
+    "textRecall": 0.4444444444444444,
+    "hallucinations": [],
+    "captionCount": 2,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "tiled walls",
+     "shower screen",
+     "carpeted stairs",
+     "wooden handrail"
+    ]
+   }
+  },
+  {
+   "arm": "open-qwen-featherless",
+   "case": "v4-kitchen-silent",
+   "ok": true,
+   "ms": 1609,
+   "inTokens": 1060,
+   "outTokens": 104,
+   "cost": 0.00017930000000000002,
+   "score": {
+    "recall": 1,
+    "seen": 5,
+    "of": 5,
+    "textRecall": 1,
+    "hallucinations": [],
+    "captionCount": 1,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "tiled backsplash",
+     "wooden floor",
+     "dining table",
+     "kitchen cabinets",
+     "stove",
+     "sink",
+     "refrigerator",
+     "door"
+    ]
+   }
+  },
+  {
    "arm": "open-gemma-device",
+   "case": "v1-kitchen-oven",
+   "ok": true,
+   "ms": 140276,
+   "inTokens": 865,
+   "outTokens": 84,
+   "cost": 0,
+   "score": {
+    "recall": 0.7142857142857143,
+    "seen": 5,
+    "of": 7,
+    "textRecall": 0.7142857142857143,
+    "hallucinations": [],
+    "captionCount": 2,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "greasy hob",
+     "dirty oven interior",
+     "tiled kitchen floor",
+     "stainless steel oven",
+     "burnt food residue"
+    ]
+   }
+  },
+  {
+   "arm": "open-gemma-device",
+   "case": "v2-lounge-bedroom",
+   "ok": true,
+   "ms": 120649,
+   "inTokens": 862,
+   "outTokens": 76,
+   "cost": 0,
+   "score": {
+    "recall": 0.875,
+    "seen": 7,
+    "of": 8,
+    "textRecall": 0.875,
+    "hallucinations": [],
+    "captionCount": 2,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "grey carpet",
+     "grey sofa with pet hair",
+     "wooden TV stand",
+     "black bed frame",
+     "white wardrobe"
+    ]
+   }
+  },
+  {
+   "arm": "open-gemma-device",
+   "case": "v3-bath-stairs",
+   "ok": true,
+   "ms": 152426,
+   "inTokens": 859,
+   "outTokens": 89,
+   "cost": 0,
+   "score": {
+    "recall": 0.5555555555555556,
+    "seen": 5,
+    "of": 9,
+    "textRecall": 0.5555555555555556,
+    "hallucinations": [],
+    "captionCount": 2,
+    "captionCountOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "stained shower screen",
+     "white toilet",
+     "grey carpet stairs",
+     "white staircase handrail",
+     "white wall"
+    ]
+   }
+  },
+  {
+   "arm": "open-gemma-device",
+   "case": "v4-kitchen-silent",
+   "ok": true,
+   "ms": 78933,
+   "inTokens": 575,
+   "outTokens": 49,
+   "cost": 0,
+   "score": {
+    "recall": 0.8,
+    "seen": 4,
+    "of": 5,
+    "textRecall": 0.8,
+    "hallucinations": [],
+    "captionCount": 0,
+    "captionCountOk": false,
+    "schemaValid": true
+   },
+   "detail": {
+    "observations": [
+     "wooden floor",
+     "white kitchen cabinets",
+     "greasy hob",
+     "stained countertop"
+    ]
+   }
+  },
+  {
+   "arm": "closed-flash",
+   "case": "s1-end-of-lease-2bed",
+   "ok": true,
+   "ms": 8945,
+   "inTokens": 618,
+   "outTokens": 388,
+   "cost": 0.0019185,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.875,
+    "matched": 7,
+    "of": 8,
+    "textRecall": 0.875,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": true,
+    "hours": 8.5,
+    "taskCount": 5,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Kitchen deep clean including hob degreasing and splashback scrub (2.5h)",
+     "Lounge deep clean including sofa vacuuming and skirting boards (1.5h)",
+     "Bedroom deep clean and roller blind dusting (2h)",
+     "Staircase pet hair extraction and deep vacuuming (1h)",
+     "Whole-house thorough carpet pet hair removal and vacuum (1.5h)"
+    ],
+    "totalHours": 8.5,
+    "jobType": "move_out_clean",
+    "photoRefs": 4
+   }
+  },
+  {
+   "arm": "closed-flash",
+   "case": "s2-3bed-deep-clean",
+   "ok": true,
+   "ms": 10364,
+   "inTokens": 616,
+   "outTokens": 382,
+   "cost": 0.0018945,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.5714285714285714,
+    "matched": 4,
+    "of": 7,
+    "textRecall": 1,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": true,
+    "hours": 10,
+    "taskCount": 5,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Bathroom descaling, mould treatment, and sanitisation (2.5h)",
+     "Kitchen degreasing and deep surface cleaning (2h)",
+     "Lounge dusting, skirting, and vacuuming (1.5h)",
+     "Three bedrooms general deep clean and vacuuming (3h)",
+     "Circulation areas, doors, and skirting boards (1h)"
+    ],
+    "totalHours": 10,
+    "jobType": "deep_clean",
+    "photoRefs": 3
+   }
+  },
+  {
+   "arm": "closed-flash",
    "case": "s3-oven-only",
+   "ok": true,
+   "ms": 10353,
+   "inTokens": 581,
+   "outTokens": 226,
+   "cost": 0.00128325,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 1,
+    "matched": 5,
+    "of": 5,
+    "textRecall": 1,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": true,
+    "hours": 2.75,
+    "taskCount": 3,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Degrease and strip oven interior cavity and fan cover (1.5h)",
+     "Soak, scrape, and detail wire racks (0.75h)",
+     "Degrease and scrape oven door and glass assembly (0.5h)"
+    ],
+    "totalHours": 2.75,
+    "jobType": "deep_clean",
+    "photoRefs": 3
+   }
+  },
+  {
+   "arm": "closed-flash",
+   "case": "s4-handyman-run",
+   "ok": true,
+   "ms": 8111,
+   "inTokens": 486,
+   "outTokens": 267,
+   "cost": 0.00136575,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 1,
+    "matched": 5,
+    "of": 5,
+    "textRecall": 1,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": true,
+    "hours": 5.25,
+    "taskCount": 4,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Assemble flat-pack wardrobe (2.5h)",
+     "Mount 55-inch TV on plasterboard wall (1.5h)",
+     "Repair dripping kitchen tap (0.75h)",
+     "Re-secure detached gutter bracket (0.5h)"
+    ],
+    "totalHours": 5.25,
+    "jobType": "handyman_medium",
+    "photoRefs": 0
+   }
+  },
+  {
+   "arm": "closed-flash",
+   "case": "s5-carpet-and-stairs",
    "ok": false,
-   "ms": 180033,
+   "ms": 5072,
    "inTokens": 0,
    "outTokens": 0,
    "cost": 0,
-   "error": "The operation was aborted due to timeout"
+   "error": "[{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\", \"status\": \"UNAVAILABLE\" } } ]",
+   "score": {
+    "jobTypeOk": false,
+    "recall": 0,
+    "matched": 0,
+    "of": 6,
+    "textRecall": 0,
+    "invented": [],
+    "precision": 0,
+    "hoursOk": false,
+    "hours": 0,
+    "taskCount": 0,
+    "photoRefsOk": false,
+    "schemaValid": false
+   }
+  },
+  {
+   "arm": "closed-flash",
+   "case": "s6-windows-inside-out",
+   "ok": true,
+   "ms": 6801,
+   "inTokens": 479,
+   "outTokens": 241,
+   "cost": 0.001263,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.3333333333333333,
+    "matched": 2,
+    "of": 6,
+    "textRecall": 0.8333333333333334,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": false,
+    "hours": 7,
+    "taskCount": 3,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Exterior window cleaning (two storeys) (2.5h)",
+     "Interior window cleaning (2h)",
+     "Remove, degrease in bath, dry, and rehang Venetian blinds (2.5h)"
+    ],
+    "totalHours": 7,
+    "jobType": "window_clean",
+    "photoRefs": 0
+   }
+  },
+  {
+   "arm": "closed-lite",
+   "case": "s1-end-of-lease-2bed",
+   "ok": true,
+   "ms": 1167,
+   "inTokens": 618,
+   "outTokens": 285,
+   "cost": 0.000582,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.875,
+    "matched": 7,
+    "of": 8,
+    "textRecall": 0.875,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": true,
+    "hours": 11.5,
+    "taskCount": 5,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Deep clean kitchen including degreasing hob and splashback (3h)",
+     "Vacuum and deep clean carpets throughout (4h)",
+     "Remove pet hair from stair risers and carpet (1.5h)",
+     "Dust and clean roller blinds (1h)",
+     "General surface dusting and detailing (2h)"
+    ],
+    "totalHours": 11.5,
+    "jobType": "move_out_clean",
+    "photoRefs": 4
+   }
+  },
+  {
+   "arm": "closed-lite",
+   "case": "s2-3bed-deep-clean",
+   "ok": true,
+   "ms": 1769,
+   "inTokens": 616,
+   "outTokens": 308,
+   "cost": 0.000616,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.8571428571428571,
+    "matched": 6,
+    "of": 7,
+    "textRecall": 1,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": false,
+    "hours": 14,
+    "taskCount": 5,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Deep clean bathroom including limescale removal and mould treatment (4h)",
+     "Deep clean kitchen including degreasing surfaces (3h)",
+     "Deep clean lounge including dusting and carpet spot treatment (2h)",
+     "Deep clean three bedrooms (3h)",
+     "General dusting and vacuuming of common areas (2h)"
+    ],
+    "totalHours": 14,
+    "jobType": "deep_clean",
+    "photoRefs": 3
+   }
+  },
+  {
+   "arm": "closed-lite",
+   "case": "s3-oven-only",
+   "ok": true,
+   "ms": 1381,
+   "inTokens": 581,
+   "outTokens": 160,
+   "cost": 0.00038525,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 1,
+    "matched": 5,
+    "of": 5,
+    "textRecall": 1,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": true,
+    "hours": 3.5,
+    "taskCount": 2,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Degrease and scrub oven cavity, roof, and floor element (2.5h)",
+     "Deep clean wire racks and interior door glass (1h)"
+    ],
+    "totalHours": 3.5,
+    "jobType": "deep_clean",
+    "photoRefs": 2
+   }
+  },
+  {
+   "arm": "closed-lite",
+   "case": "s4-handyman-run",
+   "ok": true,
+   "ms": 1139,
+   "inTokens": 486,
+   "outTokens": 241,
+   "cost": 0.000483,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 1,
+    "matched": 5,
+    "of": 5,
+    "textRecall": 1,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": true,
+    "hours": 6,
+    "taskCount": 4,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Assemble flat-pack wardrobe (3h)",
+     "Mount 55-inch TV on plasterboard wall (1.5h)",
+     "Replace kitchen tap cartridge/washer (1h)",
+     "Reattach gutter bracket to fence (0.5h)"
+    ],
+    "totalHours": 6,
+    "jobType": "handyman_medium",
+    "photoRefs": 0
+   }
+  },
+  {
+   "arm": "closed-lite",
+   "case": "s5-carpet-and-stairs",
+   "ok": true,
+   "ms": 1266,
+   "inTokens": 467,
+   "outTokens": 222,
+   "cost": 0.00044975,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.6666666666666666,
+    "matched": 4,
+    "of": 6,
+    "textRecall": 0.8333333333333334,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": true,
+    "hours": 5,
+    "taskCount": 3,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Vacuuming and deep steam cleaning of 3 rooms (3h)",
+     "Vacuuming and deep steam cleaning of stairs (1.5h)",
+     "Specialized red wine stain removal treatment (0.5h)"
+    ],
+    "totalHours": 5,
+    "jobType": "carpet_clean",
+    "photoRefs": 0
+   }
+  },
+  {
+   "arm": "closed-lite",
+   "case": "s6-windows-inside-out",
+   "ok": true,
+   "ms": 1045,
+   "inTokens": 479,
+   "outTokens": 176,
+   "cost": 0.00038375,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.5,
+    "matched": 3,
+    "of": 6,
+    "textRecall": 0.8333333333333334,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": false,
+    "hours": 8,
+    "taskCount": 3,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Interior and exterior window cleaning (two-storey) (6h)",
+     "Degrease venetian blinds in bathroom (1.5h)",
+     "Assess misted double-pane window (downstairs) (0.5h)"
+    ],
+    "totalHours": 8,
+    "jobType": "window_clean",
+    "photoRefs": 0
+   }
+  },
+  {
+   "arm": "open-gemma-hosted",
+   "case": "s1-end-of-lease-2bed",
+   "ok": true,
+   "ms": 46450,
+   "inTokens": 618,
+   "outTokens": 355,
+   "cost": null,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.75,
+    "matched": 6,
+    "of": 8,
+    "textRecall": 0.875,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": true,
+    "hours": 7.5,
+    "taskCount": 7,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Deep clean lounge carpet (1.5h)",
+     "Clean sofa upholstery (1h)",
+     "Deep clean bedroom carpet (1.5h)",
+     "Clean roller blinds (0.5h)",
+     "Degrease gas hob and splashback (1.5h)",
+     "Vacuum and clean stairs (1h)",
+     "Wipe down handrail (0.5h)"
+    ],
+    "totalHours": 7.5,
+    "jobType": "move_out_clean",
+    "photoRefs": 7
+   }
+  },
+  {
+   "arm": "open-gemma-hosted",
+   "case": "s2-3bed-deep-clean",
+   "ok": true,
+   "ms": 56450,
+   "inTokens": 616,
+   "outTokens": 330,
+   "cost": null,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.8571428571428571,
+    "matched": 6,
+    "of": 7,
+    "textRecall": 1,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": false,
+    "hours": 13.5,
+    "taskCount": 5,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Deep clean bathroom (descaling glass/taps, mould removal) (3.5h)",
+     "Degrease kitchen worktops and surfaces (3h)",
+     "Lounge deep clean (carpet, sills, soft furnishings) (2h)",
+     "Deep clean 3 bedrooms (3h)",
+     "Deep clean second bathroom (2h)"
+    ],
+    "totalHours": 13.5,
+    "jobType": "deep_clean",
+    "photoRefs": 3
+   }
+  },
+  {
+   "arm": "open-gemma-hosted",
+   "case": "s3-oven-only",
+   "ok": true,
+   "ms": 6306,
+   "inTokens": 581,
+   "outTokens": 249,
+   "cost": null,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 1,
+    "matched": 5,
+    "of": 5,
+    "textRecall": 1,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": false,
+    "hours": 4.25,
+    "taskCount": 4,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Degrease and scrub oven cavity (walls, roof, floor) (2.5h)",
+     "Clean and degrease wire racks (0.5h)",
+     "Clean oven door glass (interior/exterior) (0.75h)",
+     "Clean fan vent and element area (0.5h)"
+    ],
+    "totalHours": 4.25,
+    "jobType": "deep_clean",
+    "photoRefs": 4
+   }
+  },
+  {
+   "arm": "open-gemma-hosted",
+   "case": "s4-handyman-run",
+   "ok": true,
+   "ms": 40447,
+   "inTokens": 486,
+   "outTokens": 217,
+   "cost": null,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 1,
+    "matched": 5,
+    "of": 5,
+    "textRecall": 1,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": true,
+    "hours": 5.5,
+    "taskCount": 4,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Assemble flat-pack wardrobe (2.5h)",
+     "Mount 55-inch TV on plasterboard wall (1.5h)",
+     "Repair dripping kitchen tap (1h)",
+     "Reattach gutter bracket to fence (0.5h)"
+    ],
+    "totalHours": 5.5,
+    "jobType": "handyman_medium",
+    "photoRefs": 0
+   }
+  },
+  {
+   "arm": "open-gemma-hosted",
+   "case": "s5-carpet-and-stairs",
+   "ok": true,
+   "ms": 34484,
+   "inTokens": 467,
+   "outTokens": 205,
+   "cost": null,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.8333333333333334,
+    "matched": 5,
+    "of": 6,
+    "textRecall": 0.8333333333333334,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": false,
+    "hours": 6,
+    "taskCount": 4,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Heavy vacuuming and pet hair removal (1.5h)",
+     "Carpet steam cleaning (3 rooms) (2.5h)",
+     "Stair carpet cleaning (1.5h)",
+     "Red wine spot treatment (0.5h)"
+    ],
+    "totalHours": 6,
+    "jobType": "carpet_clean",
+    "photoRefs": 0
+   }
+  },
+  {
+   "arm": "open-gemma-hosted",
+   "case": "s6-windows-inside-out",
+   "ok": true,
+   "ms": 50916,
+   "inTokens": 479,
+   "outTokens": 193,
+   "cost": null,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.5,
+    "matched": 3,
+    "of": 6,
+    "textRecall": 0.6666666666666666,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": false,
+    "hours": 6.5,
+    "taskCount": 4,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Clean all exterior windows (two storeys) (3h)",
+     "Clean all interior windows (2h)",
+     "Degrease bathroom venetian blinds (1h)",
+     "Clean/Inspect misted downstairs window pane (0.5h)"
+    ],
+    "totalHours": 6.5,
+    "jobType": "window_clean",
+    "photoRefs": 0
+   }
+  },
+  {
+   "arm": "open-qwen-nebius",
+   "case": "s1-end-of-lease-2bed",
+   "ok": true,
+   "ms": 19409,
+   "inTokens": 613,
+   "outTokens": 469,
+   "cost": 0.000202,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.875,
+    "matched": 7,
+    "of": 8,
+    "textRecall": 0.875,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": true,
+    "hours": 9,
+    "taskCount": 9,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Vacuum lounge carpet and furniture (1.5h)",
+     "Clean crumbs and debris from sofa (0.5h)",
+     "Wipe down kitchen countertops and appliances (1h)",
+     "Degrease gas hob and clean burners (1.5h)",
+     "Scrub stained tiled splashback (1h)",
+     "Dust and clean roller blinds (0.5h)",
+     "Vacuum bedroom carpet and furniture (1h)",
+     "Clean stairs carpet and risers (1.5h)",
+     "Wipe down worn wooden handrail (0.5h)"
+    ],
+    "totalHours": 9,
+    "jobType": "move_out_clean",
+    "photoRefs": 9
+   }
+  },
+  {
+   "arm": "open-qwen-nebius",
+   "case": "s2-3bed-deep-clean",
+   "ok": true,
+   "ms": 18645,
+   "inTokens": 613,
+   "outTokens": 474,
+   "cost": 0.0002035,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.8571428571428571,
+    "matched": 6,
+    "of": 7,
+    "textRecall": 1,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": true,
+    "hours": 8,
+    "taskCount": 8,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Scrub shower glass to remove limescale (1.5h)",
+     "Remove mould from silicone seal in shower (1h)",
+     "Clean limescale from tap and fixtures (0.5h)",
+     "Clean stained toilet rim and bowl (0.5h)",
+     "Vacuum and spot-clean marked carpet (1.5h)",
+     "Dust and wipe windowsills and soft furnishings (1h)",
+     "Wipe down greasy kitchen worktops (1h)",
+     "Clear clutter and wipe kitchen surfaces (1h)"
+    ],
+    "totalHours": 8,
+    "jobType": "deep_clean",
+    "photoRefs": 8
+   }
+  },
+  {
+   "arm": "open-qwen-nebius",
+   "case": "s3-oven-only",
+   "ok": true,
+   "ms": 8908,
+   "inTokens": 570,
+   "outTokens": 257,
+   "cost": 0.0001341,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 1,
+    "matched": 5,
+    "of": 5,
+    "textRecall": 1,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": false,
+    "hours": 6,
+    "taskCount": 4,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Scrape and remove baked-on grease from oven cavity (2.5h)",
+     "Clean and degrease oven door glass (1h)",
+     "Soak and scrub wire racks to remove grease coating (1.5h)",
+     "Clean oven floor element and surrounding area (1h)"
+    ],
+    "totalHours": 6,
+    "jobType": "deep_clean",
+    "photoRefs": 4
+   }
+  },
+  {
+   "arm": "open-qwen-nebius",
+   "case": "s4-handyman-run",
+   "ok": false,
+   "ms": 7294,
+   "inTokens": 475,
+   "outTokens": 218,
+   "cost": 0.00011289999999999999,
+   "error": "schema miss",
+   "score": {
+    "jobTypeOk": false,
+    "recall": 0,
+    "matched": 0,
+    "of": 5,
+    "textRecall": 1,
+    "invented": [],
+    "precision": 0,
+    "hoursOk": false,
+    "hours": 0,
+    "taskCount": 0,
+    "photoRefsOk": false,
+    "schemaValid": false
+   },
+   "detail": {
+    "tasks": [
+     "{\"jobType\":\"handyman_medium\",\"headline\":\"Furniture assembly, TV mounting, tap repair, and gutter bracket replacement\",\"rooms\":[{\"name\":\"box room\",\"condition\":\"unspecified\"}],\"tasks\":[{\"label\":\"Assemble flat-pack wardrobe\",\"qty\":1,\"unit\":\"ea"
+    ]
+   }
+  },
+  {
+   "arm": "open-qwen-nebius",
+   "case": "s5-carpet-and-stairs",
+   "ok": true,
+   "ms": 8899,
+   "inTokens": 458,
+   "outTokens": 228,
+   "cost": 0.00011419999999999998,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 1,
+    "matched": 6,
+    "of": 6,
+    "textRecall": 1,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": false,
+    "hours": 6,
+    "taskCount": 4,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Vacuum all carpets (2h)",
+     "Pre-treat red wine spot on landing (0.5h)",
+     "Apply hot water extraction to all carpets (3h)",
+     "Blot and dry red wine spot (0.5h)"
+    ],
+    "totalHours": 6,
+    "jobType": "carpet_clean",
+    "photoRefs": 0
+   }
+  },
+  {
+   "arm": "open-qwen-nebius",
+   "case": "s6-windows-inside-out",
+   "ok": true,
+   "ms": 6992,
+   "inTokens": 469,
+   "outTokens": 173,
+   "cost": 0.00009880000000000002,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.6666666666666666,
+    "matched": 4,
+    "of": 6,
+    "textRecall": 0.6666666666666666,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": false,
+    "hours": 7,
+    "taskCount": 3,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Clean all windows inside and out (4h)",
+     "Degrease venetian blinds in bathtub (1h)",
+     "Repair or replace misted window pane (downstairs) (2h)"
+    ],
+    "totalHours": 7,
+    "jobType": "window_clean",
+    "photoRefs": 0
+   }
+  },
+  {
+   "arm": "open-qwen-featherless",
+   "case": "s1-end-of-lease-2bed",
+   "ok": true,
+   "ms": 2524,
+   "inTokens": 613,
+   "outTokens": 494,
+   "cost": 0.000298925,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.875,
+    "matched": 7,
+    "of": 8,
+    "textRecall": 0.875,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": true,
+    "hours": 11.5,
+    "taskCount": 8,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Vacuum all carpets and upholstery (2.5h)",
+     "Clean and deodorize pet hair from all surfaces (2h)",
+     "Scrub kitchen floor and wipe down baseboards (1.5h)",
+     "Degrease and polish gas hob (1.5h)",
+     "Clean and sanitize tiled splashback (1h)",
+     "Dust and clean roller blinds (0.5h)",
+     "Clean handrail and risers on carpeted stairs (1.5h)",
+     "Wipe down all window sills and frames (1h)"
+    ],
+    "totalHours": 11.5,
+    "jobType": "move_out_clean",
+    "photoRefs": 8
+   }
+  },
+  {
+   "arm": "open-qwen-featherless",
+   "case": "s2-3bed-deep-clean",
+   "ok": true,
+   "ms": 2675,
+   "inTokens": 613,
+   "outTokens": 517,
+   "cost": 0.00030927499999999997,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.8571428571428571,
+    "matched": 6,
+    "of": 7,
+    "textRecall": 1,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": true,
+    "hours": 9,
+    "taskCount": 8,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Scrub shower glass to remove limescale (1.5h)",
+     "Remove mould from silicone seal in shower (1h)",
+     "Clean limescaled tap and fixtures (0.5h)",
+     "Clean stained toilet rim and bowl (0.5h)",
+     "Deep clean marked carpet with steam or shampoo (2h)",
+     "Dust and clean soft furnishings and windowsills (1h)",
+     "Wipe down and degrease kitchen worktops (1.5h)",
+     "Clear clutter and wipe kitchen surfaces (1h)"
+    ],
+    "totalHours": 9,
+    "jobType": "deep_clean",
+    "photoRefs": 8
+   }
+  },
+  {
+   "arm": "open-qwen-featherless",
+   "case": "s3-oven-only",
+   "ok": true,
+   "ms": 2896,
+   "inTokens": 570,
+   "outTokens": 309,
+   "cost": 0.00021030000000000002,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 1,
+    "matched": 5,
+    "of": 5,
+    "textRecall": 1,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": false,
+    "hours": 4.75,
+    "taskCount": 5,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Scrape and remove baked-on grease from oven cavity roof (1.5h)",
+     "Clean oven floor element and remove baked spillage (1h)",
+     "Soak and scrub grease-coated wire racks (1h)",
+     "Clean splattered and baked-on residue on oven door glass (0.75h)",
+     "Clean fan vent at back of oven (0.5h)"
+    ],
+    "totalHours": 4.75,
+    "jobType": "deep_clean",
+    "photoRefs": 5
+   }
+  },
+  {
+   "arm": "open-qwen-featherless",
+   "case": "s4-handyman-run",
+   "ok": true,
+   "ms": 1669,
+   "inTokens": 475,
+   "outTokens": 219,
+   "cost": 0.000157925,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 1,
+    "matched": 5,
+    "of": 5,
+    "textRecall": 1,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": false,
+    "hours": 7,
+    "taskCount": 4,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Assemble flat-pack wardrobe (2.5h)",
+     "Mount 55-inch TV on plasterboard wall (2h)",
+     "Repair dripping kitchen tap (1h)",
+     "Replace missing gutter bracket (1.5h)"
+    ],
+    "totalHours": 7,
+    "jobType": "handyman_medium",
+    "photoRefs": 0
+   }
+  },
+  {
+   "arm": "open-qwen-featherless",
+   "case": "s5-carpet-and-stairs",
+   "ok": false,
+   "ms": 1512,
+   "inTokens": 458,
+   "outTokens": 217,
+   "cost": 0.0001549,
+   "error": "schema miss",
+   "score": {
+    "jobTypeOk": false,
+    "recall": 0,
+    "matched": 0,
+    "of": 6,
+    "textRecall": 0.8333333333333334,
+    "invented": [],
+    "precision": 0,
+    "hoursOk": false,
+    "hours": 0,
+    "taskCount": 0,
+    "photoRefsOk": false,
+    "schemaValid": false
+   },
+   "detail": {
+    "tasks": [
+     "{\"jobType\":\"carpet_clean\",\"headline\":\"Carpet Cleaning for Three Rooms and Stairs\",\"rooms\":[{\"name\":\"Living Room\",\"condition\":\"dirty with dog shed and red wine spot on landing\"},{\"name\":\"Bedroom 1\",\"condition\":\"dirty with dog shed\"},{\"name\":"
+    ]
+   }
+  },
+  {
+   "arm": "open-qwen-featherless",
+   "case": "s6-windows-inside-out",
+   "ok": true,
+   "ms": 2421,
+   "inTokens": 469,
+   "outTokens": 183,
+   "cost": 0.00014097500000000002,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.5,
+    "matched": 3,
+    "of": 6,
+    "textRecall": 0.5,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": false,
+    "hours": 7,
+    "taskCount": 3,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Clean all interior and exterior window surfaces (4h)",
+     "Degrease venetian blinds in bathtub (1h)",
+     "Replace or repair misted double-pane window (one pane) (2h)"
+    ],
+    "totalHours": 7,
+    "jobType": "window_clean",
+    "photoRefs": 0
+   }
+  },
+  {
+   "arm": "open-gemma-device",
+   "case": "s1-end-of-lease-2bed",
+   "ok": false,
+   "ms": 330922,
+   "inTokens": 0,
+   "outTokens": 0,
+   "cost": 0,
+   "error": "fetch failed",
+   "score": {
+    "jobTypeOk": false,
+    "recall": 0,
+    "matched": 0,
+    "of": 8,
+    "textRecall": 0,
+    "invented": [],
+    "precision": 0,
+    "hoursOk": false,
+    "hours": 0,
+    "taskCount": 0,
+    "photoRefsOk": false,
+    "schemaValid": false
+   }
+  },
+  {
+   "arm": "open-gemma-device",
+   "case": "s2-3bed-deep-clean",
+   "ok": false,
+   "ms": 240262,
+   "inTokens": 630,
+   "outTokens": 900,
+   "cost": 0,
+   "error": "schema miss",
+   "score": {
+    "jobTypeOk": false,
+    "recall": 0,
+    "matched": 0,
+    "of": 7,
+    "textRecall": 0.42857142857142855,
+    "invented": [],
+    "precision": 0,
+    "hoursOk": false,
+    "hours": 0,
+    "taskCount": 0,
+    "photoRefsOk": false,
+    "schemaValid": false
+   },
+   "detail": {
+    "tasks": [
+     "{\"jobType\":\"deep_clean\",\"headline\":\"Deep Clean Service for Three-Bedroom Semi-Detached\",\"rooms\":[{\"name\":\"Bathroom\",\"condition\":\"Limescale build-up, mould in wet seals\"},{\"name\":\"L"
+    ]
+   }
+  },
+  {
+   "arm": "open-gemma-device",
+   "case": "s3-oven-only",
+   "ok": false,
+   "ms": 84715,
+   "inTokens": 595,
+   "outTokens": 900,
+   "cost": 0,
+   "error": "schema miss",
+   "score": {
+    "jobTypeOk": false,
+    "recall": 0,
+    "matched": 0,
+    "of": 5,
+    "textRecall": 0.4,
+    "invented": [],
+    "precision": 0,
+    "hoursOk": false,
+    "hours": 0,
+    "taskCount": 0,
+    "photoRefsOk": false,
+    "schemaValid": false
+   },
+   "detail": {
+    "tasks": [
+     "{\"jobType\":\"deep_clean\",\"headline\":\"Deep Clean Oven Interior and Components\",\"rooms\":[{\"name\":\"Kitchen\",\"condition\":\"Heavy grease buildup on oven\"}],\"tasks\":[{\"label\":\"Disassemble and clean oven racks\",\"qty\":1,\"unit\":\"set\",\"hours\":1.5,\"comp"
+    ]
+   }
+  },
+  {
+   "arm": "open-gemma-device",
+   "case": "s4-handyman-run",
+   "ok": false,
+   "ms": 123873,
+   "inTokens": 500,
+   "outTokens": 900,
+   "cost": 0,
+   "error": "empty",
+   "score": {
+    "jobTypeOk": false,
+    "recall": 0,
+    "matched": 0,
+    "of": 5,
+    "textRecall": 0,
+    "invented": [],
+    "precision": 0,
+    "hoursOk": false,
+    "hours": 0,
+    "taskCount": 0,
+    "photoRefsOk": false,
+    "schemaValid": false
+   }
+  },
+  {
+   "arm": "open-gemma-device",
+   "case": "s5-carpet-and-stairs",
+   "ok": true,
+   "ms": 80223,
+   "inTokens": 481,
+   "outTokens": 889,
+   "cost": 0,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.6666666666666666,
+    "matched": 4,
+    "of": 6,
+    "textRecall": 0.6666666666666666,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": false,
+    "hours": 10,
+    "taskCount": 4,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Carpet Cleaning (3 Rooms) (4h)",
+     "Stair Cleaning (2h)",
+     "Pet Hair Removal/Deep Cleaning (Dog Shed) (3h)",
+     "Red Wine Stain Removal (Landing) (1h)"
+    ],
+    "totalHours": 10,
+    "jobType": "carpet_clean",
+    "photoRefs": 0
+   }
+  },
+  {
+   "arm": "open-gemma-device",
+   "case": "s6-windows-inside-out",
+   "ok": false,
+   "ms": 87484,
+   "inTokens": 493,
+   "outTokens": 900,
+   "cost": 0,
+   "error": "empty",
+   "score": {
+    "jobTypeOk": false,
+    "recall": 0,
+    "matched": 0,
+    "of": 6,
+    "textRecall": 0,
+    "invented": [],
+    "precision": 0,
+    "hoursOk": false,
+    "hours": 0,
+    "taskCount": 0,
+    "photoRefsOk": false,
+    "schemaValid": false
+   }
+  },
+  {
+   "arm": "none-heuristic",
+   "case": "s1-end-of-lease-2bed",
+   "ok": true,
+   "ms": 0,
+   "inTokens": 0,
+   "outTokens": 0,
+   "cost": 0,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.375,
+    "matched": 3,
+    "of": 8,
+    "textRecall": 0,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": false,
+    "hours": 2.75,
+    "taskCount": 3,
+    "photoRefsOk": false,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Clean kitchen (1h)",
+     "Clean and sanitise bathrooms (0.75h)",
+     "Floors, dusting and general tidy (1h)"
+    ],
+    "totalHours": 2.75,
+    "jobType": "move_out_clean",
+    "photoRefs": 0
+   }
+  },
+  {
+   "arm": "none-heuristic",
+   "case": "s2-3bed-deep-clean",
+   "ok": true,
+   "ms": 0,
+   "inTokens": 0,
+   "outTokens": 0,
+   "cost": 0,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0.42857142857142855,
+    "matched": 3,
+    "of": 7,
+    "textRecall": 0,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": true,
+    "hours": 8.5,
+    "taskCount": 3,
+    "photoRefsOk": false,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Deep clean all kitchen surfaces (3h)",
+     "Clean and sanitise bathrooms (2.5h)",
+     "Floors, dusting and general tidy (3h)"
+    ],
+    "totalHours": 8.5,
+    "jobType": "deep_clean",
+    "photoRefs": 0
+   }
   },
   {
    "arm": "none-heuristic",
@@ -44,6 +1934,7 @@
     "recall": 0,
     "matched": 0,
     "of": 5,
+    "textRecall": 0,
     "invented": [
      "clean and sanitise bathrooms bath"
     ],
@@ -64,21 +1955,279 @@
     "jobType": "deep_clean",
     "photoRefs": 0
    }
+  },
+  {
+   "arm": "none-heuristic",
+   "case": "s4-handyman-run",
+   "ok": true,
+   "ms": 0,
+   "inTokens": 0,
+   "outTokens": 0,
+   "cost": 0,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0,
+    "matched": 0,
+    "of": 5,
+    "textRecall": 0,
+    "invented": [
+     "clean and sanitise bathrooms bath"
+    ],
+    "precision": 0.6666666666666667,
+    "hoursOk": true,
+    "hours": 2.75,
+    "taskCount": 3,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Clean kitchen (1h)",
+     "Clean and sanitise bathrooms (0.75h)",
+     "Floors, dusting and general tidy (1h)"
+    ],
+    "totalHours": 2.75,
+    "jobType": "handyman_medium",
+    "photoRefs": 0
+   }
+  },
+  {
+   "arm": "none-heuristic",
+   "case": "s5-carpet-and-stairs",
+   "ok": true,
+   "ms": 0,
+   "inTokens": 0,
+   "outTokens": 0,
+   "cost": 0,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0,
+    "matched": 0,
+    "of": 6,
+    "textRecall": 0,
+    "invented": [
+     "clean and sanitise bathrooms bath"
+    ],
+    "precision": 0.6666666666666667,
+    "hoursOk": true,
+    "hours": 3.75,
+    "taskCount": 3,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Clean kitchen (1.25h)",
+     "Clean and sanitise bathrooms (1.25h)",
+     "Floors, dusting and general tidy (1.25h)"
+    ],
+    "totalHours": 3.75,
+    "jobType": "carpet_clean",
+    "photoRefs": 0
+   }
+  },
+  {
+   "arm": "none-heuristic",
+   "case": "s6-windows-inside-out",
+   "ok": true,
+   "ms": 0,
+   "inTokens": 0,
+   "outTokens": 0,
+   "cost": 0,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0,
+    "matched": 0,
+    "of": 6,
+    "textRecall": 0,
+    "invented": [],
+    "precision": 1,
+    "hoursOk": true,
+    "hours": 2.75,
+    "taskCount": 3,
+    "photoRefsOk": true,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Clean kitchen (1h)",
+     "Clean and sanitise bathrooms (0.75h)",
+     "Floors, dusting and general tidy (1h)"
+    ],
+    "totalHours": 2.75,
+    "jobType": "window_clean",
+    "photoRefs": 0
+   }
   }
  ],
  "summary": {
-  "vision": [],
+  "vision": [
+   {
+    "arm": "closed-flash",
+    "cases": 4,
+    "answered": 4,
+    "recall": 0.9097222222222222,
+    "textRecall": 0.9097222222222222,
+    "inventions": 0,
+    "hoursInBand": 1,
+    "captionCountsOk": 1,
+    "photoRefsOk": 1,
+    "p50ms": 10520,
+    "tokensPerCase": 2299,
+    "costPerCase": 0.0021165000000000003
+   },
+   {
+    "arm": "closed-lite",
+    "cases": 4,
+    "answered": 4,
+    "recall": 0.810515873015873,
+    "textRecall": 0.810515873015873,
+    "inventions": 0,
+    "hoursInBand": 1,
+    "captionCountsOk": 1,
+    "photoRefsOk": 1,
+    "p50ms": 1541,
+    "tokensPerCase": 2258,
+    "costPerCase": 0.0006770624999999999
+   },
+   {
+    "arm": "open-qwen-nebius",
+    "cases": 4,
+    "answered": 4,
+    "recall": 0.8219246031746033,
+    "textRecall": 0.8219246031746033,
+    "inventions": 0,
+    "hoursInBand": 1,
+    "captionCountsOk": 1,
+    "photoRefsOk": 1,
+    "p50ms": 2046,
+    "tokensPerCase": 840,
+    "costPerCase": 0.00009815
+   },
+   {
+    "arm": "open-qwen-featherless",
+    "cases": 4,
+    "answered": 4,
+    "recall": 0.7941468253968254,
+    "textRecall": 0.7941468253968254,
+    "inventions": 0,
+    "hoursInBand": 1,
+    "captionCountsOk": 1,
+    "photoRefsOk": 1,
+    "p50ms": 2533,
+    "tokensPerCase": 1754,
+    "costPerCase": 0.00025389375000000003
+   },
+   {
+    "arm": "open-gemma-device",
+    "cases": 4,
+    "answered": 4,
+    "recall": 0.7362103174603174,
+    "textRecall": 0.7362103174603174,
+    "inventions": 0,
+    "hoursInBand": 1,
+    "captionCountsOk": 0.75,
+    "photoRefsOk": 1,
+    "p50ms": 140276,
+    "tokensPerCase": 865,
+    "costPerCase": 0
+   }
+  ],
   "scope": [
    {
-    "arm": "none-heuristic",
-    "cases": 1,
+    "arm": "closed-flash",
+    "cases": 6,
+    "answered": 5,
+    "recall": 0.6299603174603174,
+    "textRecall": 0.7847222222222222,
+    "inventions": 0,
+    "hoursInBand": 0.6666666666666666,
+    "captionCountsOk": 1,
+    "photoRefsOk": 0.8333333333333334,
+    "p50ms": 8945,
+    "tokensPerCase": 714,
+    "costPerCase": 0.0012875
+   },
+   {
+    "arm": "closed-lite",
+    "cases": 6,
+    "answered": 6,
+    "recall": 0.816468253968254,
+    "textRecall": 0.923611111111111,
+    "inventions": 0,
+    "hoursInBand": 0.6666666666666666,
+    "captionCountsOk": 1,
+    "photoRefsOk": 1,
+    "p50ms": 1266,
+    "tokensPerCase": 773,
+    "costPerCase": 0.00048329166666666665
+   },
+   {
+    "arm": "open-gemma-hosted",
+    "cases": 6,
+    "answered": 6,
+    "recall": 0.8234126984126985,
+    "textRecall": 0.8958333333333334,
+    "inventions": 0,
+    "hoursInBand": 0.3333333333333333,
+    "captionCountsOk": 1,
+    "photoRefsOk": 1,
+    "p50ms": 46450,
+    "tokensPerCase": 799,
+    "costPerCase": null
+   },
+   {
+    "arm": "open-qwen-nebius",
+    "cases": 6,
+    "answered": 5,
+    "recall": 0.7331349206349206,
+    "textRecall": 0.9236111111111112,
+    "inventions": 0,
+    "hoursInBand": 0.3333333333333333,
+    "captionCountsOk": 1,
+    "photoRefsOk": 0.8333333333333334,
+    "p50ms": 8908,
+    "tokensPerCase": 836,
+    "costPerCase": 0.00014425
+   },
+   {
+    "arm": "open-qwen-featherless",
+    "cases": 6,
+    "answered": 5,
+    "recall": 0.7053571428571429,
+    "textRecall": 0.8680555555555555,
+    "inventions": 0,
+    "hoursInBand": 0.3333333333333333,
+    "captionCountsOk": 1,
+    "photoRefsOk": 0.8333333333333334,
+    "p50ms": 2524,
+    "tokensPerCase": 856,
+    "costPerCase": 0.00021204999999999998
+   },
+   {
+    "arm": "open-gemma-device",
+    "cases": 6,
     "answered": 1,
-    "recall": 0,
-    "inventions": 1,
-    "perCase": 0,
+    "recall": 0.1111111111111111,
+    "textRecall": 0.2492063492063492,
+    "inventions": 0,
     "hoursInBand": 0,
     "captionCountsOk": 1,
-    "photoRefsOk": 0,
+    "photoRefsOk": 0.16666666666666666,
+    "p50ms": 123873,
+    "tokensPerCase": 1198,
+    "costPerCase": 0
+   },
+   {
+    "arm": "none-heuristic",
+    "cases": 6,
+    "answered": 6,
+    "recall": 0.13392857142857142,
+    "textRecall": 0,
+    "inventions": 3,
+    "hoursInBand": 0.6666666666666666,
+    "captionCountsOk": 1,
+    "photoRefsOk": 0.5,
     "p50ms": 0,
     "tokensPerCase": 0,
     "costPerCase": 0

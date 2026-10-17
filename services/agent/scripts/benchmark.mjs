@@ -102,8 +102,19 @@ if (scope.length) {
 console.log('\n' + md.join('\n'));
 
 await mkdir(dirname(outFile), { recursive: true });
-await writeFile(
-  outFile,
-  JSON.stringify({ ranAt: new Date().toISOString(), kind, arms, runs, summary: { vision, scope } }, null, 1)
-);
-console.log(`\nwrote ${outFile}`);
+const payload = {
+  ranAt: new Date().toISOString(),
+  kind,
+  arms: arms.map(({ apiKey: _apiKey, ...rest }) => rest),
+  runs,
+  summary: { vision, scope },
+};
+// A report is committed and published. A credential reaching here would be a
+// leak, so refuse to write rather than trust that the mapping above held.
+const serialized = JSON.stringify(payload, null, 1);
+if (/"apiKey"|(?:AIza|sk-[A-Za-z0-9_-]{20,}|rc_[A-Za-z0-9]{20,}|v1\.[A-Za-z0-9]{20,}|tml_[A-Za-z0-9]{20,})/.test(serialized)) {
+  console.error('REFUSING TO WRITE: the report contains what looks like an endpoint credential.');
+  process.exit(1);
+}
+await writeFile(outFile, serialized);
+console.log(`\nwrote ${outFile} (${(serialized.length / 1024).toFixed(0)} kB, no credentials)`);
