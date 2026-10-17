@@ -3,12 +3,12 @@
 **The open-weight AI that quotes the job before you leave the driveway.**
 
 A solo pro walks a job, photographs it, and talks through what they'd do. Chalk
-turns that into an itemized, client-ready quote in about fifteen seconds — priced
+turns that into an itemized, client-ready quote in about twenty seconds — priced
 in-context over *that pro's own past jobs* by a TabPFN tabular model, read off the
 photos by open-weight vision, and written in their voice by an open-weight
 language model. (Measured, and printed per quote: 11–25s warm without a photo,
-~28s with one on a cold process — the attribution block shows the real split.)
-Every layer says which model actually answered.
+20–27s with two on the deployed build — the attribution block shows the real
+split.) Every layer says which model actually answered.
 
 ---
 
@@ -160,11 +160,68 @@ build, and the SPA rewrites. Node functions must be Node 22+.
 ## Tests
 
 ```bash
-npm test                     # agent: 38 specs (pricing, vision, partners, util)
+npm test                     # agent: 46 specs (pricing, vision, partners, util)
 npm run test:py              # tabpfn service: FastAPI + service logic
 ```
 
 Tests run hermetic: they force offline mode so no API key or database is needed.
+
+## Which model did what
+
+"Open weights are better" is a claim, so the repo measures it instead of
+asserting it. The same walkthrough goes to closed models, to hosted
+open-weight models, and to a model running on this machine with no network —
+and the two tasks are scored **apart**, so a weak pair of eyes is never blamed
+on a weak estimator.
+
+Two numbers per arm, because they are different failures:
+
+- **usable** — recall over what the product's parser could actually price
+- **found** — the same score read off the raw reply before parsing
+
+The gap is work a model knew and still could not deliver in a form you can
+charge for.
+
+Eyes — read the walkthrough photos (4 cases):
+
+| model that answered | weights | usable | found | invented | p50 | $/call |
+|---|---|---|---|---|---|---|
+| `gemini-3.8-flash` | closed | 91% | 91% | 0 | 10.5s | $0.0021 |
+| `google/gemma-3-27b-it` | open | 82% | 82% | 0 | 2.0s | $0.0001 |
+| `gemini-3.1-flash-lite` | closed | 81% | 81% | 0 | 1.5s | $0.0007 |
+| `Qwen/Qwen3-VL-30B-A3B-Instruct` | open | 79% | 79% | 0 | 2.5s | $0.0003 |
+| `gemma3:4b` (this laptop) | open | 74% | 74% | 0 | 140.3s | $0.0000 |
+
+Brain — itemize the scope (6 cases, one authored site read):
+
+| model that answered | weights | usable | found | hours in band | p50 | $/call |
+|---|---|---|---|---|---|---|
+| `gemini-3.1-flash-lite` | closed | 82% | 92% | 67% | 1.3s | $0.0005 |
+| `gemma-4-26b-a4b-it` | open | 82% | 90% | 33% | 46.5s | n/a |
+| `Qwen3-30B-A3B` (Nebius) | open | 73% | 92% | 33% | 8.9s | $0.0001 |
+| `Qwen3-30B-A3B` (Featherless) | open | 71% | 87% | 33% | 2.5s | $0.0002 |
+| `gemini-3.8-flash` | closed | 63% | 78% | 67% | 8.9s | $0.0013 |
+| `gemma4:e2b` (this laptop) | open | 11% | 25% | 0% | 123.9s | $0.0000 |
+| `heuristicScope()` | none | 13% | 0% | 67% | 0.0s | $0.0000 |
+
+What that says, plainly: open weights match the cheap closed model on both
+tasks and cost a fraction as much; the expensive closed model beat neither, and
+bigger spend bought worse results. The on-device 4B model is good enough to be
+the camera and not good enough to be the accountant. Nobody hallucinated a fact
+in any arm. `n/a` means the provider publishes no per-token price for that id —
+tokens are still measured, and no dollar figure is invented.
+
+```bash
+node services/agent/scripts/benchmark.mjs          # everything
+node services/agent/scripts/benchmark.mjs --kind=scope
+```
+
+The answer key, the prompts and the scoring live in
+[`services/agent/src/lib/benchmark.ts`](services/agent/src/lib/benchmark.ts).
+The prompts are imported from the modules the product actually calls, so the
+benchmark cannot quietly drift from the thing it measures. Scoring is
+keyword-set recall against a hand-written key — **no model judges a model** —
+and the stored run is in [`eval/results.json`](eval/results.json).
 
 ## Honest by construction
 
@@ -187,14 +244,18 @@ model that answered last.
 
 ```
 apps/web/            PWA (React 18, no UI framework — plain CSS, mobile-first)
+                     Walk · Quote · Jobs · You · /q/<id> client page · /try
 services/agent/      Hono API + agent logic + tests
 services/tabpfn/     FastAPI TabPFN pricing service
 services/tinker/     Tinker fine-tune for the quote voice
+eval/                the walkthrough photographs and the stored benchmark run
 docs/                deploy guide, demo script
-submission/          the challenge article
 api/                 Vercel function entry
 DESIGN.md            the design and build document
 ```
+
+Live demo: <https://chalk-nine-flax.vercel.app> — `/try` is the public page that
+asks a pro whether they would pay, and the You tab carries the scoreboard above.
 
 ## Licence
 
