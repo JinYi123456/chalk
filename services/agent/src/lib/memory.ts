@@ -200,3 +200,39 @@ export async function feedbackStats(): Promise<FeedbackStats> {
     stored: col ? 'mongodb' : 'memory',
   };
 }
+
+/* ── durable fitted contexts ───────────────────────────────────────────
+   Uploading the ledger and fitting it is the expensive half of a hosted
+   TabPFN call, and Prior Labs hands back a reusable fitted_train_set_id.
+   Keeping only the in-process copy meant every cold serverless instance paid
+   that bill again, so the first quote of the day was the slow one forever. */
+
+export type FittedDoc = { key: string; fittedId: string; rows: number; at: number };
+
+async function fittedCollection(): Promise<Collection<FittedDoc> | null> {
+  if (inTestRun() || !config.mongoUri || connectFailed) return null;
+  const base = await collection();
+  return base ? db!.collection<FittedDoc>('tabpfn_fits') : null;
+}
+
+export async function loadFitted(key: string): Promise<string | null> {
+  const col = await fittedCollection();
+  if (!col) return null;
+  const row = await col.findOne({ key }, { projection: { _id: 0 } }).catch(() => null);
+  return row?.fittedId ?? null;
+}
+
+export async function saveFitted(key: string, fittedId: string, rows: number): Promise<void> {
+  const col = await fittedCollection();
+  if (!col) return;
+  await col
+    .updateOne({ key }, { $set: { key, fittedId, rows, at: Date.now() } }, { upsert: true })
+    .catch(() => undefined);
+}
+
+/** A fitted id that stops working is dropped, not retried forever. */
+export async function dropFitted(key: string): Promise<void> {
+  const col = await fittedCollection();
+  if (!col) return;
+  await col.deleteOne({ key }).catch(() => undefined);
+}

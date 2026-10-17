@@ -1,5 +1,6 @@
 import { config } from '../config.js';
 import { bandFromProbs, bandPrices } from './band.js';
+import { dropFitted, loadFitted, saveFitted } from './memory.js';
 import type { PastJob, PriceBand } from './types.js';
 import type { PriceFeatures } from './pricing.js';
 import { fetchWithTimeout, hashStr, money } from './util.js';
@@ -129,9 +130,26 @@ async function ensureFitted(history: PastJob[], target: 'reg' | 'clf'): Promise<
   if (cached) return target === 'reg' ? cached.regressionId : cached.classificationId;
   const running = inflightFits.get(key);
   if (running) return running;
+  // A fitted context outlives the process that made it, so a cold instance can
+  // go straight to predicting instead of paying for the upload and fit again.
+  const durable = await loadFitted(key).catch(() => null);
+  if (durable) {
+    const entry = fitCache.get(key) ?? { regressionId: null, classificationId: null, rows: history.length };
+    if (target === 'reg') entry.regressionId = durable;
+    else entry.classificationId = durable;
+    fitCache.set(key, entry);
+    return durable;
+  }
   const work = fitOnce(history, target, key).finally(() => inflightFits.delete(key));
   inflightFits.set(key, work);
   return work;
+}
+
+/** A fitted id that no longer predicts is dropped so the next quote re-fits. */
+export async function invalidateFit(history: PastJob[], target: 'reg' | 'clf' = 'reg'): Promise<void> {
+  const key = historyKey(history, target);
+  fitCache.delete(key);
+  await dropFitted(key).catch(() => undefined);
 }
 
 async function fitOnce(history: PastJob[], target: 'reg' | 'clf', key: string): Promise<string | null> {
@@ -187,6 +205,7 @@ async function fitOnce(history: PastJob[], target: 'reg' | 'clf', key: string): 
   else entry.classificationId = fit.fitted_train_set_id;
   fitCache.set(key, entry);
   if (fitCache.size > 8) fitCache.delete(fitCache.keys().next().value as string);
+  await saveFitted(key, fit.fitted_train_set_id, history.length).catch(() => undefined);
   return fit.fitted_train_set_id;
 }
 
@@ -317,7 +336,12 @@ export async function tabpfnCloudPredict(features: PriceFeatures, history: PastJ
 
   const xTest = toCsv([xRow(features)], COLUMNS);
   const qs = await predictAgainst(regressionId, xTest, 'regression');
-  if (qs.length < 2) return null;
+  if (qs.length < 2) {
+    // A fitted id loaded from a previous instance may have expired on their
+    // side. Drop it so the next quote fits again instead of failing forever.
+    await invalidateFit(history, 'reg');
+    return null;
+  }
   const price = money(qs.length >= 3 ? qs[1] : (qs[0] + qs[qs.length - 1]) / 2);
   const low = money(Math.min(qs[0], price));
   const high = money(Math.max(qs[qs.length - 1], price));
