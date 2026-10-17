@@ -141,17 +141,7 @@ finishes and prices the *next* quote from cache. And the boot warm-up and the
 first quote share a single fit promise, so the history is uploaded and fitted
 once. See `docs/DEPLOY.md`.
 
-## 6. Judging-criteria map
-
-| Criterion | Where Chalk answers it |
-|---|---|
-| **Design & UX** | The walkthrough-as-interface; the receipt-shaped quote; two faces of one record — the pro's desk and the client link at `/q/<id>` |
-| **Functionality & Execution** | Real end-to-end loop on real models; tests as contract; honest fallbacks |
-| **Innovation & Creativity** | On-site pricing from the pro's *own* history with a tabular foundation model, and a win-probability curve that turns a price into a decision — asked of the classifier per price and refused when it does not slope |
-| **Impact & Viability** | Speed wins jobs, the pricing model protects margin, the margin log proves it |
-| **The Pitch** | "Quote the job before you leave the driveway — priced off the work you've already won." |
-
-## 7. What Chalk deliberately is *not*
+## 6. What Chalk deliberately is *not*
 
 - Not a CRM, not a scheduler, not a payments product. It does one job: **the
   quote** — because that is the moment money is won or lost.

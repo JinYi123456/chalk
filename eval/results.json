@@ -1,0 +1,88 @@
+{
+ "ranAt": "2026-10-17T16:01:10.727Z",
+ "kind": "scope",
+ "arms": [
+  {
+   "id": "open-gemma-device",
+   "label": "Gemma 4 E2B on this laptop",
+   "vendor": "Ollama, offline",
+   "weights": "open",
+   "where": "device",
+   "baseURL": "http://127.0.0.1:11434/v1",
+   "apiKey": "ollama",
+   "model": "gemma4:e2b",
+   "visionModel": "gemma3:4b",
+   "maxTokens": 1400,
+   "price": {
+    "in": 0,
+    "out": 0
+   },
+   "priceNote": "no per-token price exists — the weights run on the pro's own machine"
+  }
+ ],
+ "runs": [
+  {
+   "arm": "open-gemma-device",
+   "case": "s3-oven-only",
+   "ok": false,
+   "ms": 180033,
+   "inTokens": 0,
+   "outTokens": 0,
+   "cost": 0,
+   "error": "The operation was aborted due to timeout"
+  },
+  {
+   "arm": "none-heuristic",
+   "case": "s3-oven-only",
+   "ok": true,
+   "ms": 0,
+   "inTokens": 0,
+   "outTokens": 0,
+   "cost": 0,
+   "score": {
+    "jobTypeOk": true,
+    "recall": 0,
+    "matched": 0,
+    "of": 5,
+    "invented": [
+     "clean and sanitise bathrooms bath"
+    ],
+    "precision": 0.6666666666666667,
+    "hoursOk": false,
+    "hours": 8.5,
+    "taskCount": 3,
+    "photoRefsOk": false,
+    "schemaValid": true
+   },
+   "detail": {
+    "tasks": [
+     "Deep clean all kitchen surfaces (3h)",
+     "Clean and sanitise bathrooms (2.5h)",
+     "Floors, dusting and general tidy (3h)"
+    ],
+    "totalHours": 8.5,
+    "jobType": "deep_clean",
+    "photoRefs": 0
+   }
+  }
+ ],
+ "summary": {
+  "vision": [],
+  "scope": [
+   {
+    "arm": "none-heuristic",
+    "cases": 1,
+    "answered": 1,
+    "recall": 0,
+    "inventions": 1,
+    "perCase": 0,
+    "hoursInBand": 0,
+    "captionCountsOk": 1,
+    "photoRefsOk": 0,
+    "p50ms": 0,
+    "tokensPerCase": 0,
+    "costPerCase": 0
+   }
+  ]
+ }
+}

@@ -1,4 +1,5 @@
 :root {
+  color-scheme: dark;
   --slate-900: #0e1015;
   --slate-800: #12151b;
   --slate-700: #1a1e26;
@@ -22,6 +23,161 @@
 
 * {
   box-sizing: border-box;
+}
+
+/* ── the board ────────────────────────────────────────────────────────────
+   A pro reads this outdoors, one-handed, in sunlight. The chrome should look
+   like the thing it is named for: chalk resting in a groove of slate, and
+   graphite on the paper the client actually receives. */
+
+html {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(243, 241, 234, 0.32) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(243, 241, 234, 0.4), rgba(243, 241, 234, 0.24));
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(243, 241, 234, 0.62), rgba(243, 241, 234, 0.4));
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(180deg, var(--chalk), rgba(243, 241, 234, 0.62));
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* the photo strip lying on the client's paper card is drawn in pencil, not chalk */
+.strip {
+  scrollbar-width: thin;
+  scrollbar-color: #a49c8c rgba(35, 38, 45, 0.1);
+}
+
+.strip::-webkit-scrollbar {
+  height: 8px;
+}
+
+.strip::-webkit-scrollbar-track {
+  background: rgba(35, 38, 45, 0.07);
+  border-radius: 999px;
+}
+
+.strip::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #aba393, #948c7c);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+.strip.dark {
+  scrollbar-color: rgba(243, 241, 234, 0.32) transparent;
+}
+
+.strip.dark::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.strip.dark::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, rgba(243, 241, 234, 0.44), rgba(243, 241, 234, 0.26));
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+.linkbox {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(243, 241, 234, 0.26) transparent;
+}
+
+.linkbox::-webkit-scrollbar {
+  height: 6px;
+}
+
+.linkbox::-webkit-scrollbar-thumb {
+  border-width: 1px 2px;
+}
+
+::selection {
+  background: rgba(242, 183, 63, 0.32);
+  color: var(--chalk);
+}
+
+.paper ::selection {
+  background: rgba(242, 183, 63, 0.42);
+  color: var(--paper-ink);
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+.paper :focus-visible {
+  outline-color: var(--amber-deep);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .nav {
+    backdrop-filter: none;
+    background: var(--slate-900);
+  }
+}
+
+@media (forced-colors: active) {
+  .card,
+  .paper,
+  .stat,
+  .btn,
+  .field input,
+  .field textarea,
+  .field select,
+  .chip,
+  .badge {
+    border: 1px solid CanvasText;
+  }
+
+  .nav {
+    backdrop-filter: none;
+  }
+
+  ::-webkit-scrollbar-thumb,
+  .strip::-webkit-scrollbar-thumb {
+    background: CanvasText;
+  }
 }
 
 html,
@@ -335,8 +491,15 @@ p {
 .field input:focus,
 .field textarea:focus,
 .field select:focus {
-  outline: none;
   border-color: var(--amber-deep);
+}
+
+/* Pointer focus only tints the border; keyboard focus must stay visible. */
+.field input:focus-visible,
+.field textarea:focus-visible,
+.field select:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 1px;
 }
 
 .row2 {

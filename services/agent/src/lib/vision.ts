@@ -17,7 +17,7 @@ export type SiteRead = {
   ms: number;
 };
 
-type RawRead = {
+export type RawRead = {
   seen?: string;
   observations?: string[];
   measures?: string[];
@@ -31,7 +31,8 @@ const STRICT_JSON =
   'Answer with ONLY minified JSON, no prose, no code fences: ' +
   '{"seen":"one line, what is actually visible","observations":["..."],"measures":["..."],"conditions":["..."],"captions":["..."]}';
 
-function buildPrompt(jobType: string, notes: string, photoCount: number): string {
+/** The exact prompt a quote sends — exported so the benchmark cannot drift from it. */
+export function buildPrompt(jobType: string, notes: string, photoCount: number): string {
   return [
     'You are Chalk, reading a home-service job site from photos so a pro can price it fairly.',
     `The pro says this job is: ${jobType || 'a home-service job'}.`,
@@ -46,7 +47,7 @@ function buildPrompt(jobType: string, notes: string, photoCount: number): string
   ].join('\n');
 }
 
-function normalize(raw: RawRead, engine: string, ms: number): SiteRead | null {
+export function normalize(raw: RawRead, engine: string, ms: number): SiteRead | null {
   const seen = (raw.seen ?? '').toString().trim();
   if (!seen) return null;
   const clean = (a: unknown): string[] => (Array.isArray(a) ? a.map((x) => String(x).trim()).filter(Boolean).slice(0, 8) : []);

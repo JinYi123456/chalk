@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { Hono } from 'hono';
 import { config, engineLabel, llmEndpoint, llmEndpoints } from './config.js';
+import { loadReport } from './lib/benchmark.js';
 import { JOB_TYPE_LABELS, seedHistory } from './lib/history.js';
 import { buildLines } from './lib/lines.js';
 import { chatOnceDebug, resolvedTextModel } from './lib/llm.js';
@@ -96,6 +97,10 @@ app.get('/api/health', async (c) => {
     time: new Date().toISOString(),
   });
 });
+
+/* ── the scoreboard: closed vs open weights, measured on this repo ───── */
+
+app.get('/api/benchmark', async (c) => c.json(await loadReport()));
 
 /* ── the quote ──────────────────────────────────────────────────────── */
 

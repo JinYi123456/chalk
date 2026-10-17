@@ -35,3 +35,6 @@ Python/
 
 # python caches
 .pytest_cache/
+
+# working notes kept beside the project, not part of it
+submission/

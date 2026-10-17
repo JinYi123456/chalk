@@ -10,9 +10,6 @@ language model. (Measured, and printed per quote: 11–25s warm without a photo,
 ~28s with one on a cold process — the attribution block shows the real split.)
 Every layer says which model actually answered.
 
-Built for the **Hacktoberfest Open-Source AI Challenge — Week 2: Side Hustle**
-(`#hf26challenge`).
-
 ---
 
 ## The problem

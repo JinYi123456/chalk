@@ -30,7 +30,8 @@ export const ScopeDraft = z.object({
 });
 export type ScopeDraft = z.infer<typeof ScopeDraft>;
 
-const SYSTEM = `You are Chalk's estimator. You turn a walkthrough — photos plus the pro's own words — into an itemized scope of work that a pricing model can reason about, and that a client can read.
+/** The exact estimator system prompt — exported so the benchmark cannot drift from it. */
+export const SYSTEM = `You are Chalk's estimator. You turn a walkthrough — photos plus the pro's own words — into an itemized scope of work that a pricing model can reason about, and that a client can read.
 
 Rules:
 - Work in the pro's trade. If they clean, tasks are cleaning tasks. If they fix, tasks are repairs. Do not invent a different trade.
@@ -54,7 +55,8 @@ export type ScopeInput = {
   photoCount?: number;
 };
 
-function report(input: ScopeInput): string {
+/** The walkthrough report handed to the estimator. Exported for the benchmark. */
+export function scopeReport(input: ScopeInput): string {
   return JSON.stringify(
     {
       proSaysJobType: input.jobTypeHint || '',
@@ -149,7 +151,7 @@ export function heuristicScope(input: ScopeInput): JobScope {
 /** Extract a priced scope from the walkthrough. Falls back to the deterministic scope. */
 export async function extractScope(input: ScopeInput): Promise<JobScope> {
   if (!providerReady()) return heuristicScope(input);
-  const prompt = `${SYSTEM}\n\nWALKTHROUGH:\n${report(input)}\n\nReturn the scope JSON now.`;
+  const prompt = `${SYSTEM}\n\nWALKTHROUGH:\n${scopeReport(input)}\n\nReturn the scope JSON now.`;
   const text = await chatText(
     [
       { role: 'system', content: 'You output only minified JSON. No prose, no code fences.' },
