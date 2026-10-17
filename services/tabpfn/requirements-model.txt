@@ -1,0 +1,6 @@
+# Install on top of requirements.txt where you have the memory and the license.
+# The service works without these — it just serves the honest heuristic instead.
+#   pip install -r requirements.txt -r requirements-model.txt
+-r requirements.txt
+tabpfn==2.1.0
+torch==2.5.1

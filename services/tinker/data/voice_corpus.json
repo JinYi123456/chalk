@@ -1,0 +1,69 @@
+[
+  {
+    "context": {
+      "client": "Sam",
+      "headline": "3-bed end-of-lease deep clean",
+      "jobType": "Move-out / end-of-lease clean",
+      "totalHours": 7,
+      "lines": [
+        { "label": "Deep clean kitchen", "total": 150 },
+        { "label": "Clean and sanitise bathrooms", "total": 95 },
+        { "label": "Floors, dusting and general tidy", "total": 95 },
+        { "label": "Materials and consumables", "total": 24 }
+      ],
+      "total": 364,
+      "acceptedPhrases": ["no worries at all", "I've got you"]
+    },
+    "message": "Hi Sam, thanks for showing me the place today.\n\nHere's the plan and the number.\n\nKitchen, deep clean including inside the oven and the range hood — $150.\nBoth bathrooms, floors and fittings sanitised — $95.\nFloors, skirtings, dusting and a general tidy through all three bedrooms — $95.\nMaterials and consumables — $24.\n\nTotal: $364, valid for 14 days.\n\nI've assumed the carpets are getting done separately and that the oven is staying. If either changes, tell me and I'll adjust the number before I start rather than after."
+  },
+  {
+    "context": {
+      "client": "Priya",
+      "headline": "Standard 2-bed clean",
+      "jobType": "Standard home clean",
+      "totalHours": 3,
+      "lines": [
+        { "label": "Kitchen and living areas", "total": 78 },
+        { "label": "Bathroom", "total": 44 },
+        { "label": "Floors and dusting", "total": 34 },
+        { "label": "Materials and consumables", "total": 8 }
+      ],
+      "total": 164,
+      "acceptedPhrases": ["sounds good"]
+    },
+    "message": "Hi Priya, thanks for having me round.\n\nHere's what I'd do on a regular visit:\n\nKitchen and living areas, surfaces, sink and appliances — $78.\nBathroom, shower, toilet, tiles and mirror — $44.\nFloors, vacuum and mop, plus a dust through — $34.\nMaterials — $8.\n\nTotal: $164, and that holds for 14 days.\n\nI've assumed there's no pet hair beyond what I saw and that you'll have the place unlocked or leave me a key. Say the word and I'll book you in."
+  },
+  {
+    "context": {
+      "client": "Marcus",
+      "headline": "Handyman day: shelves, door, tap",
+      "jobType": "Handyman day",
+      "totalHours": 5,
+      "lines": [
+        { "label": "Fit two floating shelves", "total": 130 },
+        { "label": "Rehang and plane the hallway door", "total": 145 },
+        { "label": "Replace the kitchen tap washer", "total": 75 },
+        { "label": "Materials and consumables", "total": 42 }
+      ],
+      "total": 392,
+      "acceptedPhrases": ["happy to sort that"]
+    },
+    "message": "Hi Marcus, cheers for the walkthrough.\n\nHere's the list and the cost:\n\nTwo floating shelves, fitted and levelled into the brick — $130.\nHallway door, rehung, planed and made good — $145.\nKitchen tap, new washer and a check for drips — $75.\nFixings and materials — $42.\n\nTotal: $392, valid 14 days.\n\nI've assumed the shelves are the ones you already bought and the wall is solid brick, not plasterboard over a cavity. If the door frame is rotten once I open it up, I'll stop and requote that bit before spending anything."
+  },
+  {
+    "context": {
+      "client": "Dana",
+      "headline": "Gutter clear, two-storey",
+      "jobType": "Gutter clear",
+      "totalHours": 2.5,
+      "lines": [
+        { "label": "Clear front and rear gutters", "total": 120 },
+        { "label": "Flush and test downspouts", "total": 45 },
+        { "label": "Materials and consumables", "total": 12 }
+      ],
+      "total": 177,
+      "acceptedPhrases": ["easy"]
+    },
+    "message": "Hi Dana, thanks for the call.\n\nFront and rear gutters cleared by hand, all the debris bagged and taken away — $120.\nDownspouts flushed and tested so we know they run — $45.\nMaterials — $12.\n\nTotal: $177, held for 14 days.\n\nI've assumed safe ladder access at both ends of the house. If the rear gutter is loose or the fascia has gone soft up there, I'll send you a photo and a separate number before touching it."
+  }
+]

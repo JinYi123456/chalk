@@ -1,0 +1,19 @@
+[project]
+name = "chalk-pricing"
+version = "0.1.0"
+description = "Chalk's pricing engine — TabPFN in-context over a pro's own job history."
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi==0.115.6",
+    "uvicorn[standard]==0.34.0",
+    "pydantic==2.10.4",
+    "numpy==2.2.1",
+]
+
+[project.optional-dependencies]
+model = ["tabpfn==2.1.0", "torch==2.5.1"]
+dev = ["pytest==8.3.4", "httpx==0.28.1"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

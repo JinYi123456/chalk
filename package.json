@@ -1,0 +1,27 @@
+{
+  "name": "chalk",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chalk — the open-weight AI that quotes the job before you leave the driveway.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "apps/web",
+    "services/agent"
+  ],
+  "scripts": {
+    "dev": "concurrently --raw -n AGENT,WEB -c green,cyan \"npm run dev -w services/agent\" \"npm run dev -w apps/web\"",
+    "dev:agent": "npm run dev -w services/agent",
+    "dev:web": "npm run dev -w apps/web",
+    "build": "npm run build -w apps/web",
+    "build:all": "npm run build -w apps/web && npm run build -w services/agent",
+    "start": "npm run start -w services/agent",
+    "test": "npm run test -w services/agent",
+    "test:py": "uv run --project services/tabpfn --with pytest python -m pytest -q services/tabpfn/tests"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

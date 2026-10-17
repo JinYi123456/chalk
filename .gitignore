@@ -1,0 +1,37 @@
+# deps
+node_modules/
+.pnpm-store/
+
+# build output
+dist/
+build/
+__pycache__/
+*.pyc
+.venv/
+.uv/
+
+# env + secrets
+.env
+.env.*
+!.env.example
+
+# local runtime state
+*.log
+audio-cache/
+_chalk_*
+.cache/
+.DS_Store
+Thumbs.db
+
+# editor
+.vscode/
+.idea/
+
+# python toolchain scaffolding
+Python/
+
+# build metadata
+*.tsbuildinfo
+
+# python caches
+.pytest_cache/

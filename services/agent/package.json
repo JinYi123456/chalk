@@ -1,0 +1,36 @@
+{
+  "name": "@chalk/agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --import ./scripts/sentry-preload.mjs src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node --import ./scripts/sentry-preload.mjs dist/index.js",
+    "temporal:worker": "tsx src/temporal/worker.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@ai-sdk/openai-compatible": "^1.0.0",
+    "@hono/node-server": "^1.13.7",
+    "@mastra/core": "^0.10.0",
+    "@sentry/node": "^9.0.0",
+    "@temporalio/activity": "^1.11.0",
+    "@temporalio/client": "^1.11.0",
+    "@temporalio/common": "^1.11.0",
+    "@temporalio/worker": "^1.11.0",
+    "@temporalio/workflow": "^1.11.0",
+    "ai": "^4.3.0",
+    "hono": "^4.6.0",
+    "mongodb": "^6.12.0",
+    "pg": "^8.13.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/pg": "^8.11.10",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0"
+  }
+}
