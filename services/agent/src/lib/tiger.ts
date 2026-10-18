@@ -22,9 +22,15 @@ function getPool(): Pool | null {
   if (!config.tigerUrl || failed) return null;
   if (pool) return pool;
   try {
+    // Timescale's certificate chain roots in a self-signed CA, and `pg` reads a
+    // bare `sslmode=require` in the URI as verify-full — so every connection was
+    // refused before it started. The mode is lifted out of the URI and set
+    // explicitly: the socket is still TLS (TLS 1.2 floor), just not chain-
+    // verified. Full verification needs their CA bundle.
+    const connectionString = config.tigerUrl.replace(/([?&])sslmode=[^&]*(&|$)/, (_m, head, tail) => (head === '?' && tail === '&' ? '?' : tail === '&' ? '&' : ''));
     pool = new Pool({
-      connectionString: config.tigerUrl,
-      ssl: /sslmode=require|tigerdata|timescale/.test(config.tigerUrl) ? { rejectUnauthorized: false } : undefined,
+      connectionString,
+      ssl: { rejectUnauthorized: false, minVersion: 'TLSv1.2' },
       max: 3,
       connectionTimeoutMillis: 5000,
     });
