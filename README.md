@@ -112,12 +112,16 @@ npm run dev               # agent :8787 (tsx watch) + web :5183 (vite, proxies /
 The tabular model is the heart of Chalk and runs three ways, in order:
 
 1. **Hosted TabPFN-3.5** (Prior Labs REST) — no torch needed. Set `TABPFN_TOKEN`.
-   The pro's history is uploaded and fitted once per history revision, then both
-   heads (price quantiles, win probabilities) predict in parallel. Warm at boot,
-   de-duplicated so warm-up and the first quote never fit twice, and capped at a
-   12-second wait: Prior Labs' predict latency swings from ~4s to over a minute,
-   and a pro standing in a hallway gets the honest local answer instead of a
-   spinner. The slow call keeps running and prices the *next* quote.
+   The pro's history is uploaded and fitted once per history revision, and the
+   fitted context is kept beside the job memory so a new instance reuses it
+   instead of paying for the fit again. Price quantiles and the win-odds
+   classification both run against it — the odds ladder last, because it is
+   priced around the recommended number. Warm at boot, de-duplicated so warm-up
+   and the first quote never fit twice, and bounded: **45 seconds for the first
+   call in a cold process, 12 after that**. Prior Labs' predict latency swings
+   from ~4s to over a minute, and a pro standing in a hallway gets the honest
+   local answer instead of a spinner. The slow call keeps running and prices the
+   *next* quote.
 2. **Local TabPFN service** — `services/tabpfn` (FastAPI). Real weights on CPU:
    ```bash
    uv run --project services/tabpfn python services/tabpfn/app/main.py   # :8790

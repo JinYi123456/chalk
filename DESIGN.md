@@ -1,7 +1,7 @@
 # Chalk — an open-weight AI that quotes the job before you leave the driveway
 
 > A solo pro walks a job, snaps a few photos, and talks through what they see.
-> Chalk turns that into a priced, itemized quote in about fifteen seconds —
+> Chalk turns that into a priced, itemized quote in about twenty seconds —
 > priced by a model fitted on *that pro's own past jobs*, and able to run
 > entirely on their own machine.
 
@@ -130,16 +130,22 @@ Every edge is a **leaf**: sever it and the product still works, labelled.
 
 Deployment is a single Vercel project — a Node function for `/api/*` and the
 built PWA beside it. With Fluid compute the function may run for 300 seconds on
-the free plan; a warm quote takes about **15 seconds** (vision ~0.1–4.8s, scope
-~2.4–7s, TabPFN ~4.4s, prose ~3.4–4.5s), and the UI prints that breakdown per
+the free plan; a quote with two photographs took **22.1 seconds end to end** on
+the deployed build (eyes 2.8s, scope 3.7s, TabPFN 11.3s, prose 4.3s), and the UI
+prints that breakdown per
 quote so the number is never taken on trust.
 
 Two latency rules make that hold up on a bad day. The hosted TabPFN call gets a
-**bounded 12-second wait** — its predict latency swings from ~4s to over a
-minute, and beyond 12s the local layer answers (labelled) while the slow call
-finishes and prices the *next* quote from cache. And the boot warm-up and the
-first quote share a single fit promise, so the history is uploaded and fitted
-once. See `docs/DEPLOY.md`.
+**bounded wait** — its predict latency swings from ~4s to over a minute, and
+past the bound the local layer answers (labelled) while the slow call finishes
+and prices the *next* quote from cache. The bound is **45 seconds for the first
+call in a cold process and 12 seconds after that**, because the first call has
+to upload the history and fit it before it can predict at all, and a 12-second
+cap there priced every first quote by heuristic. The fitted context is now kept
+beside the job memory and keyed by the history it was fitted on, so a new
+instance reuses it instead of paying for the fit again. And the boot warm-up and
+the first quote share a single fit promise, so the history is uploaded and
+fitted once. See `docs/DEPLOY.md`.
 
 ## 6. What Chalk deliberately is *not*
 
