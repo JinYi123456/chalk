@@ -69,8 +69,14 @@ If the ladder is the drawn one, **say so on camera** — the card already does:
 **1:10 — send it.** Tap **Copy link** in the *Send it* card:
 
 > "One link. She sees the work, the price, what I assumed — and never my odds, my
-> usual price, or my margin. That page is the whole reason this isn't a
-> calculator."
+> usual price, or my margin. Not because the page hides them: the endpoint she
+> hits never sends them. That page is the whole reason this isn't a calculator."
+
+If the quote card reads `voice: tinker lora`, say so — it is the only part of
+this that a closed API cannot copy:
+
+> "And those words are mine. A small model was fine-tuned on the messages my
+> clients already said yes to, so it writes like me, on my laptop's budget."
 
 **1:20 — her phone.** Open the link on the second device. Do **not** scroll past
 the evidence strip:

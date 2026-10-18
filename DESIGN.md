@@ -38,11 +38,13 @@ Chalk is a phone-first app with three moves:
 | **Send** | An open-weight **Gemma**/**Qwen** writes a client-ready, itemized quote in your voice, with assumptions, a validity window, and a follow-up plan. |
 | **Answer** | One link (`/q/<id>`) the pro texts. The client opens the itemised quote on their own phone and taps **Accept** or **Not right now**. |
 
-The link is what closes the loop. It is the same stored record rendered through a
+The link is what closes the loop. It is the same stored record served through a
 client-safe face: work, price, assumptions, validity, **and the walkthrough
 photos as evidence** — the vision model's caption on each, and a thumbnail beside
 every line item it justifies. Never the win odds, the pro's usual price or their
-margin. The answer comes back as a won or lost job, which is what feeds the next
+margin — and that is enforced by the endpoint the page calls
+(`GET /api/jobs/<id>/client`, an allow-list), not by what the page chooses to
+draw. The answer comes back as a won or lost job, which is what feeds the next
 refit.
 
 The evidence is why the quote is an argument rather than a number. Photos are

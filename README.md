@@ -46,7 +46,9 @@ The link is the part that closes the loop. When the client taps **Accept**, the
 quote comes back as a won job: win rate moves, the row joins the pro's history,
 and TabPFN refits over it — so the odds on the *next* quote are built from real
 answers, not from the pro's memory of them. The client never sees the odds, the
-usual price, or the margin; only the pro's screen has those.
+usual price, or the margin — and that is the server's promise, not the page's:
+the client link is answered by `GET /api/jobs/<id>/client`, which sends an
+allow-list, so the private fields never cross the wire to a stranger.
 
 After that it keeps the promise: a durable Temporal workflow nudges about the
 quote, Tiger Data records won/lost and margin over time, MongoDB becomes the
@@ -61,7 +63,9 @@ memory of every job quoted — so the next quote is smarter.
   where the pro does. `CHALK_PROVIDER=ollama` runs the whole thing locally.
 - **Swappable by design.** Any OpenAI-compatible endpoint works — Ollama,
   llama.cpp, LM Studio, a hosted open-weight catalog — or a **Tinker**-fine-tuned
-  quote voice (see `services/tinker`).
+  quote voice: a LoRA on this pro's own accepted client messages
+  (`python services/tinker/train_voice.py`), reported on the card as
+  `voice: tinker lora` when it is the one that answered.
 - **Honest degradation.** Sever any layer — vision, pricing, market lookup,
   memory, voice — and Chalk keeps working *and says so*, in the UI, per layer.
 
