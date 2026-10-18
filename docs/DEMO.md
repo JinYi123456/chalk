@@ -58,7 +58,7 @@ come back. *Do not narrate over it.*
 If the ladder is the drawn one, **say so on camera** — the card already does:
 
 > "That shape is drawn through a single estimate, not five classifier answers.
-> Over 46 jobs the win/lose signal is too noisy to see a price effect, so the
+> Over the forty-odd jobs in her ledger the win/lose signal is too noisy to see a price effect, so the
 > app refuses to show you a model answer it does not have."
 
 **1:05 — the undercharge warning.** It fires on this walkthrough:

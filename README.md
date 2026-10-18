@@ -166,7 +166,7 @@ build, and the SPA rewrites. Node functions must be Node 22+.
 ## Tests
 
 ```bash
-npm test                     # agent: 46 specs (pricing, vision, partners, util)
+npm test                     # agent: 51 specs (pricing, vision, partners, util, visibility)
 npm run test:py              # tabpfn service: FastAPI + service logic
 ```
 
