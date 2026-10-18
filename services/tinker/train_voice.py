@@ -73,23 +73,37 @@ def train(rows: list[dict], base_model: str, rank: int, steps: int) -> None:
     client = service.create_lora_training_client(base_model=base_model, rank=rank)
     print(f"training {base_model} (rank {rank}) on {len(rows)} pairs")
 
-    def tokens(messages: list[dict]) -> list[int]:
+    def datum(messages: list[dict]):
+        # Behaviour cloning over the whole rendered turn: the target is the
+        # sequence shifted by one, so every token is predicted from the ones
+        # before it. Weighting the prompt tokens at 0 would train the reply
+        # only, but the corpus is four pairs — the point is the voice, not the
+        # token budget.
         rendered = "\n".join(f"{m['role']}: {m['content']}" for m in messages)
-        return client.get_tokenizer().encode(rendered)
+        ids = client.get_tokenizer().encode(rendered)
+        return types.Datum(
+            model_input=types.ModelInput.from_ints(list(ids)),
+            loss_fn_inputs={"target_tokens": list(ids[1:]) + [int(ids[0])], "weights": [1.0] * len(ids)},
+        )
 
     for step in range(steps):
         batch = []
-        for i, row in enumerate(rows):
-            ids = tokens(row["messages"])
-            batch.append(types.Datum.from_ints(ids))
+        for row in rows:
+            batch.append(datum(row["messages"]))
             if len(batch) >= 4:
                 client.forward_backward(batch, loss_fn="cross_entropy")
                 client.optim_step(types.AdamParams(learning_rate=6e-5))
                 batch = []
-        print(f"step {step + 1}/{steps}")
+        if batch:
+            client.forward_backward(batch, loss_fn="cross_entropy")
+            client.optim_step(types.AdamParams(learning_rate=6e-5))
+        print(f"step {step + 1}/{steps}", flush=True)
 
-    client.save_state(name="chalk-quote-voice").result()
-    print("saved. Point TINKER_SAMPLER_PATH at the saved sampler to use it in the agent.")
+    state = client.save_state(name="chalk-quote-voice").result()
+    sampler = client.save_weights_for_sampler(name="chalk-quote-voice").result()
+    print(f"state   {state.path}")
+    print(f"sampler {sampler.path}")
+    print(f"Set TINKER_SAMPLER_PATH={sampler.path} and the agent writes quotes in this voice.")
 
 
 def main() -> int:

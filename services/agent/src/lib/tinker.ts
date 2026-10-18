@@ -52,10 +52,20 @@ export async function voiceFromTinker(context: QuoteVoiceContext): Promise<strin
         model: config.tinkerSamplerPath,
         messages: [
           { role: 'system', content: TINKER_SYSTEM },
-          { role: 'user', content: quoteVoicePrompt(context) },
+          // Qwen3's own control token. `chat_template_kwargs` alone did not
+          // hold: measured on the sampler, the answer came back in
+          // `reasoning_content` with `content` empty, and parseVoiceResponse
+          // (correctly) refused it. /no_think costs 2 reasoning tokens instead
+          // of 2015 and returns the message.
+          { role: 'user', content: `${quoteVoicePrompt(context)} /no_think` },
         ],
         max_tokens: 400,
         temperature: 0.8,
+        // Qwen3 answers inside a reasoning block and leaves `content` empty
+        // unless thinking is turned off — the sampler trained on it still
+        // inherits the template. Measured: 180 tokens of budget, 0 of them
+        // an answer.
+        chat_template_kwargs: { enable_thinking: false },
       }),
       signal: AbortSignal.timeout(30_000),
     });
