@@ -23,6 +23,7 @@ import { audioFile, readAloudDataUrl, ttsEnabled } from './lib/tts.js';
 import type { PastJob, Quote } from './lib/types.js';
 import { hashStr, stableStringify } from './lib/util.js';
 import { readSite } from './lib/vision.js';
+import { clientQuoteView } from './lib/visibility.js';
 
 export const app = new Hono();
 
@@ -305,6 +306,17 @@ app.get('/api/jobs/:id', async (c) => {
   if (!q) return c.json({ error: 'no such quote' }, 404);
   const followUp = await followUpStatus(q.id);
   return c.json({ ...q, followUpLive: followUp });
+});
+
+/**
+ * The client's face of the same record, enforced on the server — see
+ * lib/visibility.ts. A stranger holding the link gets the work, the price and
+ * the assumptions; the odds, the usual price and the hours never leave here.
+ */
+app.get('/api/jobs/:id/client', async (c) => {
+  const q = await quoteById(c.req.param('id'));
+  if (!q) return c.json({ error: 'no such quote' }, 404);
+  return c.json(clientQuoteView(q as unknown as Record<string, any>));
 });
 
 app.post('/api/jobs/:id/outcome', async (c) => {

@@ -157,6 +157,8 @@ export const api = {
   benchmark: () => j<Benchmark>('/api/benchmark'),
   jobs: () => j<{ kind: string; jobs: Quote[] }>('/api/jobs'),
   job: (id: string) => j<Quote & { followUpLive?: unknown }>(`/api/jobs/${id}`),
+  /** The client's face of the record — the server strips the pro's fields. */
+  clientJob: (id: string) => j<Quote>(`/api/jobs/${id}/client`),
   quote: (input: QuoteInput) =>
     j<Quote>('/api/quote', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(input) }),
   outcome: (id: string, outcome: 'won' | 'lost') =>

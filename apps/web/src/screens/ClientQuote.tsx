@@ -4,8 +4,9 @@ import { api, money, type Quote } from '../api.ts';
 /**
  * What the client sees. Deliberately a different face of the same record: the
  * itemised work, the words the pro wrote, what they assumed, and the price.
- * The pro's win odds, usual price and margin are never rendered here — this
- * page is the one you text to a stranger.
+ * The split is enforced by the endpoint this calls — `/api/jobs/<id>/client`
+ * never sends the win odds, the usual price or the hours behind a line — so
+ * the page cannot leak them by rendering something it should not.
  */
 export function ClientQuote({ id }: { id: string }) {
   const [quote, setQuote] = useState<Quote | null>(null);
@@ -16,7 +17,7 @@ export function ClientQuote({ id }: { id: string }) {
   useEffect(() => {
     let alive = true;
     api
-      .job(id)
+      .clientJob(id)
       .then((q) => {
         if (!alive) return;
         setQuote(q);
