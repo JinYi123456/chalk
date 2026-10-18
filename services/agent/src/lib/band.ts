@@ -26,7 +26,7 @@ export function bandPrices(base: number): number[] {
 /**
  * Is the model's own ladder worth showing?
  *
- * Measured on the demo ledger (45 jobs), the classifier answered every rung and
+ * Measured on the demo ledger (42 seeded jobs), the classifier answered every rung and
  * produced this: 66% · 67% · 67% · 65% · 67% across a 44% price range. It is a
  * real answer from a real fit, and it is useless — worse than useful: it tells a
  * pro that price does not change their odds. At small n the win/lose signal is

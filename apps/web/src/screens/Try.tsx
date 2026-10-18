@@ -51,7 +51,7 @@ export function Try() {
         <h3>Two minutes, if you run a home-service business.</h3>
         <p className="msg">
           This is a real quote, produced by photographing four rooms and talking through the job — priced against the
-          pro&rsquo;s own last 45 jobs rather than a national average.
+          pro&rsquo;s own last 42 jobs rather than a national average.
         </p>
         <p style={{ margin: '14px 0 0' }}>
           <a className="btn primary" href={DEMO_QUOTE}>

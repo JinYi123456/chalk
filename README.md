@@ -2,6 +2,8 @@
 
 **The open-weight AI that quotes the job before you leave the driveway.**
 
+![Same job. Two ways to quote.](docs/images/00-cover.png)
+
 A solo pro walks a job, photographs it, and talks through what they'd do. Chalk
 turns that into an itemized, client-ready quote in about twenty seconds — priced
 in-context over *that pro's own past jobs* by a TabPFN tabular model, read off the

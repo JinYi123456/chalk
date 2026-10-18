@@ -198,7 +198,7 @@ describe('bandFromProbs (the classifier’s own ladder)', () => {
 });
 
 describe('usableBand (should the model’s ladder be shown?)', () => {
-  it('rejects the flat ladder the classifier actually produced on 45 jobs', () => {
+  it('rejects the flat ladder the classifier actually produced on 42 jobs', () => {
     // Measured: 66 · 67 · 67 · 65 · 67 % across 219→315. Real answer, useless card.
     const flat = [
       { label: 'Win the job', at: 219, win: 0.66 },
