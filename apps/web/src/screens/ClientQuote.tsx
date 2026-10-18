@@ -89,7 +89,7 @@ export function ClientQuote({ id }: { id: string }) {
         <h3>{quote.headline}</h3>
         <div className="sub">
           {quote.client ? `Prepared for ${quote.client} · ` : ''}
-          {validUntil.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+          {new Date(quote.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
         </div>
 
         {photos.length > 0 && (
