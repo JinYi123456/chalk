@@ -16,7 +16,7 @@ const proQuote = {
   photos: ['data:image/jpeg;base64,…'],
   photoCaptions: ['kitchen: greasy hob, tiled splashback'],
   lines: [
-    { label: 'Scrub kitchen floor tiles', detail: 'tiles and grout', qty: 1, unit: 'area', hours: 1.5, complexity: 4, total: 74, photo: 1 },
+    { label: 'Scrub kitchen floor tiles', detail: '1.5h · complexity 4/5', qty: 1, unit: 'area', hours: 1.5, complexity: 4, total: 74, photo: 1 },
     { label: 'Materials and consumables', kind: 'materials', total: 26 },
   ],
   // everything below is the pro's side of the desk
@@ -41,14 +41,26 @@ describe('clientQuoteView (what a stranger holding the link can read)', () => {
     expect(view.photos).toHaveLength(1);
     expect(view.photoCaptions).toHaveLength(1);
     expect(view.lines).toHaveLength(2);
-    expect(view.lines[0]).toEqual({ label: 'Scrub kitchen floor tiles', detail: 'tiles and grout', total: 74, photo: 1 });
+    expect(view.lines[0]).toEqual({ label: 'Scrub kitchen floor tiles', detail: '1.5h · complexity 4/5', total: 74, photo: 1 });
   });
 
-  it('never sends the odds, the usual price, the market check or the hours', () => {
+  it('never sends the odds, the usual price, the market check or the model wiring', () => {
     const serialized = JSON.stringify(clientQuoteView(proQuote));
-    for (const privateOf of ['winProbability', 'band', 'usualPrice', 'undercharge', 'marketBenchmark', 'hours', 'complexity', 'engine', 'timings', 'followUp']) {
+    for (const privateOf of ['winProbability', 'band', 'usualPrice', 'undercharge', 'marketBenchmark', 'engine', 'timings', 'followUp']) {
       expect(serialized, `the client link must not carry ${privateOf}`).not.toContain(privateOf);
     }
+  });
+
+  it('shares the work but not the pricing inputs, field for field', () => {
+    // `detail` is a sentence the pro authored for this quote and the client is
+    // meant to read it — "1.5h · complexity 2/5" is the argument for the price.
+    // What stays server-side are the structured inputs the line is priced from.
+    const [first] = clientQuoteView(proQuote).lines;
+    expect(first.detail).toContain('1.5h');
+    expect(first).not.toHaveProperty('hours');
+    expect(first).not.toHaveProperty('complexity');
+    expect(first).not.toHaveProperty('qty');
+    expect(first).not.toHaveProperty('unit');
   });
 
   it('answers a missing id with an empty record rather than a stack of defaults', () => {

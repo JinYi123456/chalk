@@ -24,8 +24,9 @@ const CLIENT_FIELDS = [
   'audioUrl',
 ] as const;
 
-/** Line items the client is shown: what the work is and what it costs. Hours
- *  and complexity stay on the pro's side — they are the margin. */
+/** Line items the client is shown: the label, the sentence the pro wrote for
+ *  it, the cost, and the photograph that justifies it. The structured inputs
+ *  the price was computed from — qty, unit, hours, complexity — do not travel. */
 const CLIENT_LINE_FIELDS = ['label', 'detail', 'total', 'photo'] as const;
 
 const pick = (src: Record<string, any>, keys: readonly string[]) => {
