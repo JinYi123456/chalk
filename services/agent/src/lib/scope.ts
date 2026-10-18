@@ -19,7 +19,12 @@ export const ScopeDraft = z.object({
         complexity: z.number().default(3),
         // Which walkthrough photo shows this task — it becomes the evidence
         // shown next to the line item on the client's quote.
-        photo: z.number().optional(),
+        //
+        // nullish, not optional: told to omit the field for a task no photo
+        // shows, the model answers `"photo": null`. Measured on the deployed
+        // build — one null on one task threw away an otherwise perfect scope
+        // and the quote silently priced off the deterministic floor.
+        photo: z.number().nullish(),
       })
     )
     .default([]),

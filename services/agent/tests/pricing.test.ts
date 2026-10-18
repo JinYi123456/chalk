@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { canonicalJobType, seedHistory } from '../src/lib/history.js';
 import { accessScore, bandFromProbs, features, heuristicPricing, priceBand, saneRange, underchargeWarning, usableBand, usualPrice } from '../src/lib/pricing.js';
 import { buildLines, sumLines } from '../src/lib/lines.js';
-import { heuristicScope, normalizeScope } from '../src/lib/scope.js';
+import { heuristicScope, normalizeScope, ScopeDraft } from '../src/lib/scope.js';
+import { looseJson } from '../src/lib/util.js';
 import type { JobScope } from '../src/lib/types.js';
 
 const scope: JobScope = {
@@ -172,6 +173,24 @@ describe('walkthrough photo evidence', () => {
     expect(one.tasks[0].photo).toBeUndefined();
     const two = normalizeScope(draft, { site: null, notes: '', photoCount: 2 });
     expect(two.tasks[0].photo).toBe(2);
+  });
+
+  it('keeps a scope whose nulls say "no photo shows this", the way the model actually answers', () => {
+    // Verbatim shape of a Qwen3-30B-A3B reply on the deployed build: a perfect
+    // scope with "photo": null on every task. The schema asked for an omitted
+    // key; the model answered null instead, and the whole answer was discarded
+    // for a three-line deterministic estimate.
+    const reply =
+      '{"jobType":"move_out_clean","headline":"End-of-lease deep clean","rooms":[{"name":"Kitchen","condition":"tiles need scrubbing"}],' +
+      '"tasks":[{"label":"Scrub kitchen floor tiles","qty":1,"unit":"area","hours":2.5,"complexity":3,"photo":null},' +
+      '{"label":"Clean oven interior and exterior","qty":1,"unit":"unit","hours":2,"complexity":4,"photo":null}],' +
+      '"materials":[{"label":"Degreaser","cost":12}],"access":["Stairs only, no lift"],"risks":[],"confidence":0.9}';
+    const parsed = ScopeDraft.safeParse(looseJson(reply));
+    expect(parsed.success).toBe(true);
+    const scoped = normalizeScope(parsed.success ? parsed.data : null!, { site: null, notes: '', photoCount: 0 });
+    expect(scoped.tasks).toHaveLength(2);
+    expect(scoped.tasks.every((t) => t.photo === undefined)).toBe(true);
+    expect(scoped.totalHours).toBe(4.5);
   });
 });
 
