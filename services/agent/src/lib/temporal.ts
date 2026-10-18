@@ -104,6 +104,22 @@ export async function signalQuoteAccepted(quoteId: string, price?: number): Prom
   }
 }
 
+/**
+ * Cancel a quote's follow-up. Deleting a job has to stop its timers as well as
+ * its rows, or the pro keeps being nudged about a quote that no longer exists.
+ */
+export async function cancelQuoteFollowUp(quoteId: string): Promise<boolean> {
+  const c = await getClient();
+  if (!c) return false;
+  try {
+    await c.workflow.getHandle(`chalk-quote-${quoteId}`).cancel();
+    return true;
+  } catch {
+    // No such workflow, or follow-ups were never scheduled for this quote.
+    return false;
+  }
+}
+
 export type FollowUpStatus = {
   enabled: boolean;
   workflowId: string;

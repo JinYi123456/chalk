@@ -10,13 +10,13 @@ import { JOB_TYPE_LABELS, seedHistory } from './lib/history.js';
 import { buildLines } from './lib/lines.js';
 import { chatOnceDebug, resolvedTextModel } from './lib/llm.js';
 import { marketRate, serpApiEnabled } from './lib/market.js';
-import { feedbackStats, memoryKind, memoryStatus, quoteById, recentQuotes, recordFeedback, rememberQuote, similarQuotes } from './lib/memory.js';
+import { feedbackStats, forgetQuote, memoryKind, memoryStatus, quoteById, recentQuotes, recordFeedback, rememberQuote, similarQuotes } from './lib/memory.js';
 import { features, priceJob, underchargeWarning } from './lib/pricing.js';
 import { writeQuote } from './lib/quote-agent.js';
 import { extractScope } from './lib/scope.js';
 import { captureException, sentryEnabled, withSpan } from './lib/sentry.js';
 import { tabpfnCloudEnabled } from './lib/tabpfn-cloud.js';
-import { followUpStatus, signalQuoteAccepted, startQuoteFollowUp, temporalStatus } from './lib/temporal.js';
+import { cancelQuoteFollowUp, followUpStatus, signalQuoteAccepted, startQuoteFollowUp, temporalStatus } from './lib/temporal.js';
 import { marginSeries, recordJobEvent, tigerEnabled, tigerStatus } from './lib/tiger.js';
 import { voiceFromTinker, tinkerEnabled } from './lib/tinker.js';
 import { audioFile, readAloudDataUrl, ttsEnabled } from './lib/tts.js';
@@ -324,6 +324,23 @@ app.post('/api/jobs/:id/outcome', async (c) => {
   });
   const signalled = outcome === 'won' ? await signalQuoteAccepted(id, body.price) : false;
   return c.json({ ok: true, id, outcome, signalled });
+});
+
+/* ── forgetting a job ─────────────────────────────────────────────────
+   A quote carries photographs of somebody's home, so deletion has to exist.
+   There is still no auth on this build — one pro, one device — which means the
+   capability is bounded by whoever can reach the URL. That is stated as a limit
+   in the README rather than papered over: accounts come before this is anyone's
+   production system. */
+
+app.delete('/api/jobs/:id', async (c) => {
+  const id = c.req.param('id');
+  const q = await quoteById(id);
+  if (!q) return c.json({ error: 'no such quote' }, 404);
+  const gone = await forgetQuote(id).catch(() => false);
+  // A follow-up timer for a job that no longer exists must not keep nudging.
+  await cancelQuoteFollowUp(id).catch(() => undefined);
+  return c.json({ ok: gone, id, removedPhotos: q.photos?.length ?? 0 });
 });
 
 /* ── the pricing profile ────────────────────────────────────────────── */

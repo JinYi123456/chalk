@@ -14,6 +14,7 @@ export function QuoteView({
 }) {
   const [audio, setAudio] = useState<string | null>(quote.audioUrl);
   const [reading, setReading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const readAloud = async () => {
     if (audio) {
@@ -45,6 +46,21 @@ export function QuoteView({
   // phone has to get it too. Same record, client-safe face.
   const shareUrl = `${window.location.origin}/q/${quote.id}`;
   const canShare = typeof navigator !== 'undefined' && 'share' in navigator;
+
+  const del = async () => {
+    if (!window.confirm(`Delete this quote, its ${quote.photos?.length ?? 0} photograph(s) and the client link?`)) return;
+    setDeleting(true);
+    const gone = await fetch(`/api/jobs/${quote.id}`, { method: 'DELETE' })
+      .then((r) => r.ok)
+      .catch(() => false);
+    setDeleting(false);
+    if (gone) {
+      onToast('quote and its photos deleted');
+      onBack();
+    } else {
+      onToast('that did not delete — the quote is still there');
+    }
+  };
 
   const copyLink = async () => {
     try {
@@ -300,6 +316,11 @@ export function QuoteView({
           </button>
         </div>
       )}
+      {/* A quote carries photographs of somebody's home, so the way to make them
+          stop existing has to be in the product, not only in the README. */}
+      <button className="btn ghost small" style={{ marginTop: 14 }} onClick={del} disabled={deleting}>
+        {deleting ? 'Deleting…' : 'Delete this quote and its photos'}
+      </button>
       <p className="small-note">Quoted {timeAgo(quote.createdAt)}.</p>
     </div>
   );

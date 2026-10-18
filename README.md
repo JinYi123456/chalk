@@ -271,5 +271,8 @@ MIT for everything in this repo — see [LICENSE](LICENSE). Three things the wor
 - **Qwen, Gemma and their hosted endpoints** each carry their own licences (Gemma under the Gemma
   terms, Qwen under Apache-2.0 for the sizes used here).
 - **Client photos are personal data.** A quote stores the photos the pro took of someone's home, so a
-  real deployment needs a retention and deletion story. Today: they live with the quote in the
-  configured store and can be dropped by deleting the quote.
+  real deployment needs a retention and deletion story. Chalk has one: `DELETE /api/jobs/<id>` removes
+  the record, its photographs and its client link together, cancels any follow-up timer for that job,
+  and the quote view carries the button that calls it. It is reachable by anyone who can reach the URL
+  on this build, because there is still no auth — which is the same limit as everything else here, and
+  the reason accounts come before this is anyone's production system.

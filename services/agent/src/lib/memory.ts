@@ -125,6 +125,19 @@ export async function memoryStatus(): Promise<{ kind: 'mongodb' | 'memory'; coun
   return { kind: col ? 'mongodb' : 'memory', count };
 }
 
+/**
+ * Delete a quote and everything attached to it. A quote holds photographs of
+ * somebody's home, so "we can drop it" has to be a thing the software does, not
+ * a thing the README promises. Returns false when there was no such quote.
+ */
+export async function forgetQuote(id: string): Promise<boolean> {
+  const existed = ram.delete(id);
+  const col = await collection();
+  if (!col) return existed;
+  const res = await col.deleteOne({ id }).catch(() => null);
+  return Boolean(res?.deletedCount) || existed;
+}
+
 export function forgetAll(): void {
   ram.clear();
 }
